@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "expo": {
     "name": "lovepaperplane_app",
     "slug": "lovepaperplane_app",
@@ -24,3 +25,8 @@
     }
   }
 }
+=======
+  "name": "lovepaperplane",
+  "displayName": "lovepaperplane"
+}
+>>>>>>> react native cli
