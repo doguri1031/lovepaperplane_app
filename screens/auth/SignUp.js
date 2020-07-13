@@ -15,8 +15,6 @@ import {DatePicker  } from 'native-base';
 import {useLogUserIn} from '../../AuthContext';
 
 
-//behavior="padding"
-//(KeyboardAvoidingView)
 
 const View = styled.View`
     display:flex;
