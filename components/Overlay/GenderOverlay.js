@@ -5,16 +5,17 @@ const genderList =[
     {value:'female'}
 ];
 
-export default ({gender,setGender,setLocationOverlay}) => {
+export default ({gender,setGender,setGenderOverlay}) => {
     return (
         <>
-            {genderList.map(item=>
-                <CheckBox title={item.value}  
+            {genderList.map((item,index)=>
+                <CheckBox key={index} 
+                    title={item.value}  
                     checkedIcon='dot-circle-o' 
                     uncheckedIcon='circle-o' 
                     checked={item.value===gender} 
                     onPress={()=>{setGender(item.value);
-                        setLocationOverlay(false);
+                        setGenderOverlay(false);
                         }
                     }
                 />)

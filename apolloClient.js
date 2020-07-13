@@ -14,8 +14,8 @@ import { AsyncStorage } from 'react-native';
 //import { AsyncStorage } from '@react-native-community/async-storage';
 >>>>>>> react native cli
 
-export const APOLLO_URI =process.env.NODE_ENV=== "development" ?"http://localhost:4000":"https://localhost:4000";
-export const APOLLO_URI_WS =process.env.NODE_ENV=== "development" ?"ws://localhost:4000":"wss://localhost:4000";
+export const APOLLO_URI ="http://2f647f0501a8.ngrok.io";
+export const APOLLO_URI_WS ="ws://localhost:4000";
 
 
 
@@ -82,7 +82,7 @@ export default async()=>{
                 );
 >>>>>>> react native cli
             },
-            //wsLink,
+            wsLink,
             httpLink,
             ),
         withClientState({
