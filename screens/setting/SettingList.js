@@ -1,18 +1,20 @@
-import React from "react";
-import {Text} from "react-native";
-import styled from "styled-components";
-
-const View = styled.View`
-    justify-content:center;
-    align-items: center;
-    flex:1;
-`;
-
-export default () => {
-
+import React, {Component} from 'react';
+import {
+  Container,
+  Header,
+  Content,
+  List,
+  ListItem,
+  Text,
+  Separator,
+} from 'native-base';
+export default class ListSeparatorExample extends Component {
+  render() {
     return (
-        <View>
-            <Text>settingList</Text>
-        </View>
+      <Container>
+        <Header />
+        <Content></Content>
+      </Container>
     );
+  }
 }

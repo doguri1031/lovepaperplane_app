@@ -1,0 +1,14 @@
+import 'react-native-gesture-handler';
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import Home from '../screens/home/Home';
+import CreateRoom from '../screens/home/CreateRoom';
+const AuthNavigation = createStackNavigator();
+
+export default () => (
+  <AuthNavigation.Navigator headerMode="none">
+    <AuthNavigation.Screen name="Home" component={Home} />
+    <AuthNavigation.Screen name="CreateRoom" component={CreateRoom} />
+  </AuthNavigation.Navigator>
+);

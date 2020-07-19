@@ -10,6 +10,11 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+      <!--20200716 park add start-->
+      <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9370323781016527~3244894330"/>
+      <!--20200716 park add end-->      
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

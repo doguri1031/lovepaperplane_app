@@ -1,43 +1,48 @@
-import React,{createContext, useContext, useState} from "react";
-import {AsyncStorage} from "react-native";
+import React, {createContext, useContext, useState} from 'react';
+import {AsyncStorage} from 'react-native';
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({isLoggedIn:isLoggedInProp,children}) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
-    
-    const logUserIn = async(token) =>{
-        try{
-            await AsyncStorage.setItem("isLoggedIn","true");
-            await AsyncStorage.setItem("token",token);
-            setIsLoggedIn(true);
-        }catch(e){
-            console.log(e);
-        }
-    }
+export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
 
-    const logUserOut = async()=>{
-        try{
-            await AsyncStorage.setItem("isLoggedIn","false");
-            setIsLoggedIn(false);
-        }catch(e){
-            console.log(e);
-        }
+  const logUserIn = async (token) => {
+    try {
+      console.log('auth conetext: ' + token);
+      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('isLoggedIn', 'true');
+      setIsLoggedIn(true);
+    } catch (e) {
+      console.log(e);
     }
-    return <AuthContext.Provider value={{isLoggedIn,logUserIn,logUserOut}}>{children}</AuthContext.Provider>
-}
+  };
 
-export const useIsLoggedIn = () =>{
-    const {isLoggedIn} = useContext(AuthContext);
-    return isLoggedIn;
-}
+  const logUserOut = async () => {
+    try {
+      await AsyncStorage.setItem('isLoggedIn', 'false');
+      setIsLoggedIn(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  return (
+    <AuthContext.Provider value={{isLoggedIn, logUserIn, logUserOut}}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useIsLoggedIn = () => {
+  const {isLoggedIn} = useContext(AuthContext);
+  return isLoggedIn;
+};
 
 export const useLogUserIn = () => {
-    const {logUserIn} = useContext(AuthContext);
-    return logUserIn;
-}
+  const {logUserIn} = useContext(AuthContext);
+  return logUserIn;
+};
 
 export const userLogUserOut = () => {
-    const {logUserOut} = useContext(AuthContext);
-    return logUserOut
-}
+  const {logUserOut} = useContext(AuthContext);
+  return logUserOut;
+};
