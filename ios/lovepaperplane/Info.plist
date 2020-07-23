@@ -24,6 +24,8 @@
         <string>1</string>
         <key>LSRequiresIPhoneOS</key>
         <true/>
+        <key>GADApplicationIdentifier</key>
+        <string>ca-app-pub-8122736237394906~7216794901</string>
         <key>NSAppTransportSecurity</key>
         <dict>
             <key>NSAllowsArbitraryLoads</key>

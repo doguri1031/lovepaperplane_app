@@ -1189,6 +1189,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/toolbar-android/-/toolbar-android-0.1.0-rc.2.tgz#86cae655836afacc52d4063062cc59837d1a8640"
   integrity sha512-UCblqsitOcoYxVc6QzcaqCKogeRnePPMw7cbGvW5GI/GXIwQel8Kge9d910W3MUPUzw3pFzhIZVug6U3W067Pg==
 
+"@react-native-firebase/admob@^7.3.2":
+  version "7.3.3"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/admob/-/admob-7.3.3.tgz#5d6b82c41b5bb64b2e05195fe616a759752bebc0"
+  integrity sha512-/uWngWp6udutmgICv7Twcb3Rq3g7YxDqGYu/o3cvFTV8Eq36aGHx6EfZwejOe6b3uwlUmu79pScZ+H7P8kNdmg==
+
 "@react-native-firebase/app-types@6.7.2":
   version "6.7.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app-types/-/app-types-6.7.2.tgz#d2e1530af5702e00578914b41468898c10d3289c"

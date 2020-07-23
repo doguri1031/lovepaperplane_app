@@ -29,6 +29,7 @@
 		6BF5DE7504D93DFE35C6806E /* libPods-lovepaperplane-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4897DFDF9E0768AA584AC223 /* libPods-lovepaperplane-tvOS.a */; };
 		7F189D4800900C7526D01662 /* libPods-lovepaperplane.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 541ED62C5C71A9E1520609BA /* libPods-lovepaperplane.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		9B8307A924C9BE9B00ADC006 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9B8307A824C9BE9B00ADC006 /* GoogleService-Info.plist */; };
 		A367354E2A394DEC9CC9117C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D17434969F9245E2A7159253 /* MaterialIcons.ttf */; };
 		BCAD78CB7F6C48F5BD13D7BB /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7DE645BDD5744EF9A8080797 /* Feather.ttf */; };
 		C754625BED5E42189D9C7501 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7B885BCB99B48AA857D375B /* Foundation.ttf */; };
@@ -90,6 +91,7 @@
 		87D89323C3B2485C998B67D2 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		914A6F96F446DAA7B18BAE84 /* Pods-lovepaperplane-lovepaperplaneTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lovepaperplane-lovepaperplaneTests.release.xcconfig"; path = "Target Support Files/Pods-lovepaperplane-lovepaperplaneTests/Pods-lovepaperplane-lovepaperplaneTests.release.xcconfig"; sourceTree = "<group>"; };
 		9281AFB1AB3E79913822EDC4 /* libPods-lovepaperplane-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lovepaperplane-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B8307A824C9BE9B00ADC006 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B3840E553CA742BD93933AD5 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		D17434969F9245E2A7159253 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		D7B885BCB99B48AA857D375B /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				9B8307A824C9BE9B00ADC006 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* lovepaperplane */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* lovepaperplaneTests */,
@@ -407,6 +410,7 @@
 				62B003A217EE45D8AE9DC6DF /* FontAwesome5_Brands.ttf in Resources */,
 				D1B08A007AF74EB9AB59B9B3 /* FontAwesome5_Regular.ttf in Resources */,
 				6849CA4667D248E8B625513B /* FontAwesome5_Solid.ttf in Resources */,
+				9B8307A924C9BE9B00ADC006 /* GoogleService-Info.plist in Resources */,
 				F149576734E34C22B4F5EB9A /* Fontisto.ttf in Resources */,
 				C754625BED5E42189D9C7501 /* Foundation.ttf in Resources */,
 				616B4108757E4E9692E20E0B /* MaterialCommunityIcons.ttf in Resources */,
@@ -480,6 +484,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-lovepaperplane-lovepaperplaneTests/Pods-lovepaperplane-lovepaperplaneTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/PersonalizedAdConsent/PersonalizedAdConsent.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -500,6 +505,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PersonalizedAdConsent.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
@@ -574,6 +580,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-lovepaperplane/Pods-lovepaperplane-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/PersonalizedAdConsent/PersonalizedAdConsent.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -594,6 +601,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PersonalizedAdConsent.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
