@@ -7,6 +7,7 @@ import Home from '../screens/home/Home';
 import HomeNavigation from './HomeNavigation';
 import RoomList from '../screens/message/RoomList';
 import SettingList from '../screens/setting/SettingList';
+import SettingNavigation from './SettingNavigation';
 
 const TabNavigation = createBottomTabNavigator();
 
@@ -41,7 +42,7 @@ export default () => {
       />
       <TabNavigation.Screen
         name="setting"
-        component={SettingList}
+        component={SettingNavigation}
         options={{
           tabBarIcon: ({focused}) => (
             <NavIcon
