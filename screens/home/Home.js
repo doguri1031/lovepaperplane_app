@@ -17,7 +17,8 @@ import admob, {
   RewardedAdEventType,
   TestIds,
 } from '@react-native-firebase/admob';
-import {GETUSER} from './HomeQueries';
+import {GETUSER, ADDPLANE} from './HomeQueries';
+import StatusBar from '../../components/StatusBar';
 
 // Interstitial
 InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL);
@@ -50,18 +51,27 @@ const PaperTypeButtons = styled.View`
     margin: 0px 5px;
   }
 `;
+const Square = styled.View`
+  border: 5px solid #00b894;
+  padding: 30px 30px;
+  border-radius: 100;
+  background-color: #dfe6e9;
+`;
 
 export default ({navigation}) => {
   const {loading, data, refetch} = useQuery(GETUSER);
   const [adLoaded, setAdLoaded] = useState(false);
+  const [addPlaneMutation] = useMutation(ADDPLANE);
   useEffect(() => {
-    const eventListener = rewarded.onAdEvent((type, error, reward) => {
+    const eventListener = rewarded.onAdEvent(async (type, error, reward) => {
+      console.log(error);
       if (type === RewardedAdEventType.LOADED) {
         setAdLoaded(true);
       }
 
       if (type === RewardedAdEventType.EARNED_REWARD) {
         console.log('User earned reward of ', reward);
+        await addPlaneMutation();
       }
     });
     refetch();
@@ -88,10 +98,21 @@ export default ({navigation}) => {
         <Body>
           <PaperTypeButtons>
             <TouchableOpacity onPress={onCreateRoom}>
-              <Icon name="paper-plane" size={36} color="blue" />
+              <Square>
+                <Icon
+                  style={{marginRight: 10}}
+                  name="paper-plane"
+                  size={120}
+                  color="#55efc4"
+                />
+              </Square>
             </TouchableOpacity>
           </PaperTypeButtons>
-          <Text>{`${data.getUser.availablePlane} 개`}</Text>
+          <StatusBar
+            airplaneNumber={data.getUser.availablePlane}
+            maxNumber={10}
+          />
+          <Text>{`${data.getUser.availablePlane}  / 10 개`}</Text>
           {adLoaded && (
             <TouchableOpacity
               onPress={() => {
