@@ -4,19 +4,17 @@ import {ListItem, Input} from 'react-native-elements';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import {DatePicker} from 'native-base';
 import styled from 'styled-components';
+import {useUserInfo} from '../../AuthContext';
 
 export default ({navigation}) => {
-  // const username = useInput('');
-  // const nickname = useInput('');
-  const [gender, setGender] = useState('');
-  const [location, setLocation] = useState('');
-  const [birthDate, setBirthDate] = useState('');
-  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+  const userInfo = useUserInfo();
 
-  const [genderOverlay, setGenderOverlay] = useState(false);
-  const [locationOverlay, setLocationOverlay] = useState(false);
-  const [usernameError, setUsernameError] = useState('');
-  const datePickerRef = useRef();
+  const [username, setUsername] = useState(userInfo.username);
+  const [nickname, setNickname] = useState(userInfo.nickname);
+  const [gender, setGender] = useState(userInfo.gender);
+  const [location, setLocation] = useState(userInfo.location);
+  const [birthDate, setBirthDate] = useState(userInfo.birthDate);
+  console.log('userInfo: ' + userInfo);
 
   return (
     <ScrollView>
@@ -27,7 +25,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'user'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={'#123123134'}
+          rightTitle={username}
         />
         <ListItem
           onPress={() => navigation.navigate('EditNickName')}
@@ -35,7 +33,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'id-card'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={'Doguri'}
+          rightTitle={nickname}
         />
         <ListItem
           // key={1}
@@ -43,14 +41,14 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'transgender'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={'Male'}
+          rightTitle={gender}
         />
         <ListItem
           title={'Location: '}
           leftIcon={<Icon5 name={'map-marker'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={'福岡'}
+          rightTitle={location}
         />
         <ListItem
           onPress={() => navigation.navigate('EditBirthDay')}
@@ -58,7 +56,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'calendar'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={'1991/10/31'}
+          rightTitle={birthDate}
         />
       </View>
     </ScrollView>

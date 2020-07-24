@@ -4,6 +4,11 @@ export const LOGIN = gql`
   query login($machineId: String!) {
     login(machineId: $machineId) {
       id
+      username
+      nickname
+      birthDate
+      location
+      gender
     }
   }
 `;
