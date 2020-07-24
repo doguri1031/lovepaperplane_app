@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Icon, Picker, Form} from 'native-base';
 
-const locationList = [
+export const locationList = [
   {value: '北海道'},
   {value: '青森県'},
   {value: '岩手県'},

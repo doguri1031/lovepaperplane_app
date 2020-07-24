@@ -5,6 +5,7 @@ export const MODIFY_NICKNAME = gql`
     editUser(data: $data, dataType: $dataType) {
       id
       username
+      nickname
       birthDate
       gender
       location
@@ -19,6 +20,7 @@ export const MODIFY_BIRTHDATE = gql`
     editUser(data: $data, dataType: $dataType) {
       id
       username
+      nickname
       birthDate
       gender
       location
@@ -33,6 +35,7 @@ export const MODIFY_LOCATION = gql`
     editUser(data: $data, dataType: $dataType) {
       id
       username
+      nickname
       birthDate
       gender
       location

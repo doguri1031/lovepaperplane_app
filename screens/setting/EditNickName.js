@@ -6,23 +6,32 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import {DatePicker, Title} from 'native-base';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
-import {useUserInfo} from '../../AuthContext';
+import {useUserInfo, useUserState} from '../../AuthContext';
 import {MODIFY_NICKNAME} from './EditQueries';
 
-export default () => {
+export default ({navigation}) => {
   const [modifyNickNameMutation] = useMutation(MODIFY_NICKNAME);
 
   const userInfo = useUserInfo();
+  const setUserState = useUserState();
   const nickname = useInput(userInfo.nickname);
 
   const changeNickName = async () => {
-    const {data: editUser} = await modifyNickNameMutation({
+    const {
+      data: {editUser},
+    } = await modifyNickNameMutation({
       variables: {
         data: nickname.value,
         dataType: 'nickname',
       },
     });
-    console.log('edit result: ' + editUser);
+    console.log('edit result: ' + editUser.nickname);
+
+    if (editUser) {
+      console.log(editUser.nickname);
+      setUserState(editUser);
+      navigation.navigate('EditProfile');
+    }
   };
 
   return (
