@@ -27,8 +27,16 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
       console.log(e);
     }
   };
+
+  const setUserState = (user) => {
+    console.log(user.nickname);
+    console.log('modified user data');
+    setUserInfo(user);
+  };
+
   return (
-    <AuthContext.Provider value={{isLoggedIn, logUserIn, logUserOut, userInfo}}>
+    <AuthContext.Provider
+      value={{isLoggedIn, logUserIn, logUserOut, userInfo, setUserState}}>
       {children}
     </AuthContext.Provider>
   );
@@ -52,4 +60,9 @@ export const userLogUserOut = () => {
 export const useUserInfo = () => {
   const {userInfo} = useContext(AuthContext);
   return userInfo;
+};
+
+export const useUserState = () => {
+  const {setUserState} = useContext(AuthContext);
+  return setUserState;
 };
