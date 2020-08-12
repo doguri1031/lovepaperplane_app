@@ -12,6 +12,7 @@ import SettingNavigation from './SettingNavigation';
 const TabNavigation = createBottomTabNavigator();
 
 export default () => {
+  
   return (
     <TabNavigation.Navigator
       initialRouteName="Home"

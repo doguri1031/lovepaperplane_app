@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
   const [userInfo, setUserInfo] = useState('');
-
+  const [messages, setMessages] = useState('');
   const logUserIn = async (user) => {
     try {
       console.log('auth conetext: ' + user.id);
@@ -27,8 +27,17 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
       console.log(e);
     }
   };
+
   return (
-    <AuthContext.Provider value={{isLoggedIn, logUserIn, logUserOut, userInfo}}>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        logUserIn,
+        logUserOut,
+        userInfo,
+        messages,
+        setMessages,
+      }}>
       {children}
     </AuthContext.Provider>
   );
@@ -53,3 +62,14 @@ export const useUserInfo = () => {
   const {userInfo} = useContext(AuthContext);
   return userInfo;
 };
+
+//TODO
+export const useMessages = () => {
+  const {messages} = useContext(AuthContext);
+  return messages;
+};
+export const useSetMessages = () => {
+  const {setMessages} = useContext(AuthContext);
+  return setMessages;
+};
+//TODO
