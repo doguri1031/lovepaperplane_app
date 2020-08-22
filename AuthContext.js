@@ -7,7 +7,7 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
   const [userInfo, setUserInfo] = useState('');
   const [messages, setMessages] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState('');
   const logUserIn = async (user) => {
     try {
       console.log('auth conetext: ' + user.user.id);
@@ -29,7 +29,7 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
     }
   };
   const setUserState = (user) => {
-    console.log(user.nickname);
+    console.log(user.user.nickname);
     console.log('modified user data');
     setUserInfo(user);
   };
