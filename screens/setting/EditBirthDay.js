@@ -7,12 +7,13 @@ import {DatePicker, Title} from 'native-base';
 import styled from 'styled-components';
 import moment from 'moment';
 import {MODIFY_BIRTHDATE} from './EditQueries';
-import {useUserInfo, useUserState} from '../../AuthContext';
+import {useUserInfo, useUserState, useSetRefresh} from '../../AuthContext';
 
 export default ({navigation}) => {
   const datePickerRef = useRef();
   const userInfo = useUserInfo();
   const setUserState = useUserState();
+  const setRefresh = useSetRefresh();
   const [birthDate, setBirthDate] = useState(userInfo.birthDate);
   const [modifyBirthDateMutation] = useMutation(MODIFY_BIRTHDATE);
 
@@ -27,7 +28,9 @@ export default ({navigation}) => {
     });
     console.log('edit result: ' + editUser);
     if (editUser) {
-      setUserState(editUser);
+      userInfo.user.birthDate = editUser.birthDate;
+      setRefresh(editUser.birthDate);
+      setUserState(userInfo);
       navigation.navigate('EditProfile');
     }
   };

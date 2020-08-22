@@ -6,7 +6,7 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import {DatePicker, Title} from 'native-base';
 import {ListItem} from 'react-native-elements';
 import {MODIFY_LOCATION} from './EditQueries';
-import {useUserInfo, useUserState} from '../../AuthContext';
+import {useUserInfo, useUserState, useSetRefresh} from '../../AuthContext';
 import {locationList} from '../../components/Overlay/LocationSelector';
 
 const location = locationList;
@@ -14,6 +14,7 @@ export default ({navigation}) => {
   const [modifyLocationMutation] = useMutation(MODIFY_LOCATION);
   const userInfo = useUserInfo();
   const setUserState = useUserState();
+  const setRefresh = useSetRefresh();
 
   // Find index in array location
   const [visibleItem, setVisibleItem] = useState(
@@ -36,7 +37,9 @@ export default ({navigation}) => {
       },
     });
     if (editUser) {
-      setUserState(editUser);
+      userInfo.user.location = editUser.location;
+      setRefresh(editUser.location);
+      setUserState(userInfo);
       navigation.navigate('EditProfile');
     }
   };

@@ -6,7 +6,12 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import {DatePicker, Title} from 'native-base';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
-import {useUserInfo, useUserState, AuthContext} from '../../AuthContext';
+import {
+  useUserInfo,
+  useUserState,
+  AuthContext,
+  useSetRefresh,
+} from '../../AuthContext';
 import {MODIFY_NICKNAME} from './EditQueries';
 
 export default ({navigation}) => {
@@ -14,6 +19,7 @@ export default ({navigation}) => {
 
   const userInfo = useUserInfo();
   const setUserState = useUserState();
+  const setRefresh = useSetRefresh();
   const nickname = useInput(userInfo.user.nickname);
   const changeNickName = async () => {
     const {
@@ -26,6 +32,7 @@ export default ({navigation}) => {
     });
     if (editUser) {
       userInfo.user.nickname = editUser.nickname;
+      setRefresh(editUser.nickname);
       setUserState(userInfo);
       navigation.navigate('EditProfile');
     }
