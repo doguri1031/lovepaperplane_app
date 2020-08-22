@@ -5,24 +5,44 @@ import {NavigationContainer} from '@react-navigation/native';
 import TabNavigation from './TabNavigation';
 import {useSubscription} from 'react-apollo-hooks';
 import {NEWMESSAGE} from '../screens/message/MessageQueries';
-import {useUserInfo, useSetMessages} from '../AuthContext';
+import {
+  useUserInfo,
+  useSetMessages,
+  useLoading,
+  useSetLoading,
+} from '../AuthContext';
+import {GETUSER} from '../screens/home/HomeQueries';
 
 const MainNavigation = createStackNavigator();
 
 export default () => {
   const userInfo = useUserInfo();
   const setMessages = useSetMessages();
+  const setLoading = useSetLoading();
+  /*const {loading: getUserLoading, data: getUserData, refetch} = useQuery(
+    GETUSER,
+  );
 
-  const {loading, data, error} = useSubscription(NEWMESSAGE, {
+  const {
+    loading: newMessageLoding,
+    data: newMessageData,
+    error,
+  } = useSubscription(NEWMESSAGE, {
     variables: {userId: userInfo.id},
   });
+  //초기 유저 데이터 userEffect
+  useEffect(() => {
+    console.log('userdata');
+  }, [getUserData]);
+  */
+  //메세지 데이터 useEffect
   useEffect(() => {
     console.log('subsub');
-    console.log(data);
-    if (data) {
-      setMessages(data.newMessage.data);
+    console.log(newMessageData);
+    if (newMessageData) {
+      setMessages(newMessageData.newMessage.data);
     }
-  }, [data]);
+  }, [newMessageData]);
 
   return (
     //subscripttion연결
