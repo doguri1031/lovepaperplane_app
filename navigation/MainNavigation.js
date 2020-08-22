@@ -24,7 +24,7 @@ export default () => {
   );
   */
   console.log('this is userInfo');
-  console.log(userInfo);
+  console.log(userInfo.user.id);
   const {
     loading: newMessageLoding,
     data: newMessageData,

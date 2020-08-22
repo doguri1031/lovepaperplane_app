@@ -1,21 +1,24 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React from 'react';
 import {useQuery, useMutation} from 'react-apollo-hooks';
 import {TouchableOpacity, View, Switch, Text, ScrollView} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-import {DatePicker, Title} from 'native-base';
+
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
-import {useUserInfo, useUserState} from '../../AuthContext';
+import {
+  useUserInfo,
+  useSetLoading,
+  useSetUserInfo,
+  AuthContext,
+} from '../../AuthContext';
 import {MODIFY_NICKNAME} from './EditQueries';
 
 export default ({navigation}) => {
   const [modifyNickNameMutation] = useMutation(MODIFY_NICKNAME);
-
   const userInfo = useUserInfo();
-  const setUserState = useUserState();
+  const setUserInfo = useSetUserInfo();
   const nickname = useInput(userInfo.user.nickname);
-
   const changeNickName = async () => {
     const {
       data: {editUser},
@@ -25,10 +28,10 @@ export default ({navigation}) => {
         dataType: 'nickname',
       },
     });
-    console.log('edit result: ' + editUser.nickname);
-
     if (editUser) {
-      setUserState(userInfo);
+      let tempUser = userInfo;
+      tempUser.user.nickname = editUser.nickname;
+      setUserInfo({...tempUser});
       navigation.navigate('EditProfile');
     }
   };
