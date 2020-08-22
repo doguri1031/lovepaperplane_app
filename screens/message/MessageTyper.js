@@ -4,10 +4,17 @@ import {SENDMESSAGE} from './MessageQueries';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
 import {Button} from '../../components/Buttons';
+import {TextInput, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-ionicons';
+import constants from '../../constants';
+
 const View = styled.View`
   display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
-const TextInput = styled.input``;
+
 export default () => {
   const text = useInput();
   const [newMessageMutation] = useMutation(SENDMESSAGE);
@@ -18,9 +25,9 @@ export default () => {
     }
     return true;
   };
-  const onPress = () => {
+  const onPress = async () => {
     if (textValidate()) {
-      const {loading, data} = newMessageMutation({
+      const {loading, data} = await newMessageMutation({
         variables: {
           roomId: 'ckdlx45en6eyz0999lcudlk7o',
           toId: 'ckclwwp37wja80975wpqu2h75',
@@ -28,12 +35,25 @@ export default () => {
           data: text.value,
         },
       });
+      text.onChangeText('');
     }
   };
   return (
     <View>
-      <TextInput type="text" {...text} />
-      <Button text="submit" onPress={onPress} />
+      <TextInput
+        style={{
+          width: constants.width / 1.2,
+          borderBottomWidth: 0.5,
+          borderBottomStyle: 'solid',
+        }}
+        type="text"
+        {...text}
+        placeholder="input your message"
+      />
+
+      <TouchableOpacity onPress={onPress}>
+        <Icon name="paper-plane" size={30} color="#55efc4" />
+      </TouchableOpacity>
     </View>
   );
 };

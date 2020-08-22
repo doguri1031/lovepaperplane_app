@@ -12,8 +12,8 @@ import {persistCache} from 'apollo-cache-persist';
 import {AsyncStorage} from 'react-native';
 //import { AsyncStorage } from '@react-native-community/async-storage';
 
-export const APOLLO_URI = 'http://0230fec44d14.ngrok.io';
-export const APOLLO_URI_WS = 'ws://0230fec44d14.ngrok.io';
+export const APOLLO_URI = 'http://fc04029f3f70.ngrok.io';
+export const APOLLO_URI_WS = 'ws://fc04029f3f70.ngrok.io';
 
 const authLink = setContext(async (_, {headers}) => {
   const token = await AsyncStorage.getItem('token');
@@ -38,7 +38,7 @@ export default async () => {
     options: {
       reconnect: true,
       connectionParams: async () => ({
-        useridd: await AsyncStorage.getItem('token'),
+        userid: await AsyncStorage.getItem('token'),
       }),
     },
   });

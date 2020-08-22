@@ -14,14 +14,19 @@ import {
 import {useQuery} from 'react-apollo-hooks';
 import {SEARCH_ROOMLIST} from './RoomsQueries';
 import {useUserInfo} from '../../AuthContext';
-
+import {View} from 'react-native';
+import MessageTyper from './MessageTyper';
 export default ({navigation}) => {
   const userInfo = useUserInfo();
   console.log('userInfo test : ' + userInfo.rooms[0].id);
   const roomsInfo = userInfo.rooms;
   console.log(roomsInfo);
-
   return (
+    <View>
+      <MessageTyper />
+    </View>
+  );
+  /*return (
     <Container>
       <Header />
       <List>
@@ -45,5 +50,5 @@ export default ({navigation}) => {
         ))}
       </List>
     </Container>
-  );
+  );*/
 };

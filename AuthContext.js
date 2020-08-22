@@ -7,7 +7,7 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
   const [userInfo, setUserInfo] = useState('');
   const [messages, setMessages] = useState('');
-  const [loading, setLoading] = useState('');
+  const [loading, setLoading] = useState(true);
   const logUserIn = async (user) => {
     try {
       console.log('auth conetext: ' + user.user.id);
@@ -28,11 +28,6 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
       console.log(e);
     }
   };
-  const setUserState = (user) => {
-    console.log(user.user.nickname);
-    console.log('modified user data');
-    setUserInfo(user);
-  };
 
   return (
     <AuthContext.Provider
@@ -45,7 +40,7 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
         setMessages,
         loading,
         setLoading,
-        setUserState,
+        setUserInfo,
       }}>
       {children}
     </AuthContext.Provider>
@@ -90,7 +85,7 @@ export const useSetLoading = () => {
   const {setLoading} = useContext(AuthContext);
   return setLoading;
 };
-export const useUserState = () => {
-  const {setUserState} = useContext(AuthContext);
-  return setUserState;
+export const useSetUserInfo = () => {
+  const {setUserInfo} = useContext(AuthContext);
+  return setUserInfo;
 };
