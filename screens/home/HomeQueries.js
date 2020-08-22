@@ -56,5 +56,18 @@ export const GETUSER = gql`
       createdAt
       updatedAt
     }
+    seeRooms {
+      id
+      participant {
+        id
+        nickname
+      }
+      messages {
+        id
+      }
+      isAlive
+      createdAt
+      updatedAt
+    }
   }
 `;

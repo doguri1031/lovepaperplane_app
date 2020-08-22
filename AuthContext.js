@@ -9,8 +9,8 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
 
   const logUserIn = async (user) => {
     try {
-      console.log('auth conetext: ' + user.id);
-      await AsyncStorage.setItem('token', user.id);
+      console.log('auth conetext: ' + user.user.id);
+      await AsyncStorage.setItem('token', user.user.id);
       await AsyncStorage.setItem('isLoggedIn', 'true');
       setUserInfo(user);
       setIsLoggedIn(true);

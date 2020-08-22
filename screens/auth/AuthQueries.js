@@ -3,12 +3,51 @@ import {gql} from 'apollo-boost';
 export const LOGIN = gql`
   query login($machineId: String!) {
     login(machineId: $machineId) {
-      id
-      username
-      nickname
-      birthDate
-      location
-      gender
+      user {
+        id
+        username
+        nickname
+        birthDate
+        gender
+        location
+        # pushFlag
+        availablePlane
+        createdAt
+        updatedAt
+      }
+      rooms {
+        id
+        participant {
+          id
+          username
+          nickname
+          birthDate
+          gender
+          location
+          machineId
+          itsMe
+        }
+        messages {
+          id
+          data
+          type
+          to {
+            id
+            nickname
+            itsMe
+          }
+          from {
+            id
+            nickname
+            itsMe
+          }
+          isChecked
+          updatedAt
+        }
+        isAlive
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
