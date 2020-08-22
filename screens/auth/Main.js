@@ -28,7 +28,7 @@ export default ({navigation}) => {
     await refetch();
     if (!loading && data) {
       console.log('login');
-      console.log('tokenId: ' + data.login.id);
+      console.log('tokenId: ' + data.login);
       logUserIn(data.login);
     } else {
       Alert.alert("you don't have account");

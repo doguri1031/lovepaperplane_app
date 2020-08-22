@@ -10,8 +10,8 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
   const [loading, setLoading] = useState(true);
   const logUserIn = async (user) => {
     try {
-      console.log('auth conetext: ' + user.id);
-      await AsyncStorage.setItem('token', user.id);
+      console.log('auth conetext: ' + user.user.id);
+      await AsyncStorage.setItem('token', user.user.id);
       await AsyncStorage.setItem('isLoggedIn', 'true');
       setUserInfo(user);
       setIsLoggedIn(true);
@@ -28,6 +28,11 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
       console.log(e);
     }
   };
+  const setUserState = (user) => {
+    console.log(user.nickname);
+    console.log('modified user data');
+    setUserInfo(user);
+  };
 
   return (
     <AuthContext.Provider
@@ -40,6 +45,7 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
         setMessages,
         loading,
         setLoading,
+        setUserState,
       }}>
       {children}
     </AuthContext.Provider>
@@ -83,4 +89,8 @@ export const useLoading = () => {
 export const useSetLoading = () => {
   const {setLoading} = useContext(AuthContext);
   return setLoading;
+};
+export const useUserState = () => {
+  const {setUserState} = useContext(AuthContext);
+  return setUserState;
 };

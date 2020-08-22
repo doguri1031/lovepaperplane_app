@@ -7,20 +7,29 @@ import {DatePicker, Title} from 'native-base';
 import styled from 'styled-components';
 import moment from 'moment';
 import {MODIFY_BIRTHDATE} from './EditQueries';
+import {useUserInfo, useUserState} from '../../AuthContext';
 
-export default () => {
+export default ({navigation}) => {
   const datePickerRef = useRef();
-  const [birthDate, setBirthDate] = useState('1991/10/31');
+  const userInfo = useUserInfo();
+  const setUserState = useUserState();
+  const [birthDate, setBirthDate] = useState(userInfo.birthDate);
   const [modifyBirthDateMutation] = useMutation(MODIFY_BIRTHDATE);
 
   const changeBirthDate = async () => {
-    const {data: editUser} = await modifyBirthDateMutation({
+    const {
+      data: {editUser},
+    } = await modifyBirthDateMutation({
       variables: {
         data: birthDate,
         dataType: 'birthDate',
       },
     });
     console.log('edit result: ' + editUser);
+    if (editUser) {
+      setUserState(editUser);
+      navigation.navigate('EditProfile');
+    }
   };
 
   return (
@@ -52,10 +61,10 @@ export default () => {
         animationType={'fade'}
         androidMode={'default'}
         placeHolderText=" "
-        textStyle={{color: '#F5F5F5'}}
+        textStyle={{color: 'transparent'}}
         placeHolderTextStyle={{color: '#d3d3d3'}}
         onDateChange={(e) =>
-          setBirthDate(moment(e.toDateString()).format('YYYY年MM月DD日'))
+          setBirthDate(moment(e.toDateString()).format('YYYY/MM/DD'))
         }
         disabled={true}
       />
