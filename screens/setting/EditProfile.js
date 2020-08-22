@@ -4,12 +4,11 @@ import {ListItem, Input} from 'react-native-elements';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import {DatePicker} from 'native-base';
 import styled from 'styled-components';
-import {useUserInfo, AuthContext} from '../../AuthContext';
+import {AuthContext, useUserInfo} from '../../AuthContext';
 import {Button} from '../../components/Buttons';
 
 export default ({navigation}) => {
-  let userInfo = useUserInfo();
-
+  const userInfo = useUserInfo();
   return (
     <ScrollView>
       <View style={{marginTop: 0, width: '100%', alignSelf: 'center'}}>

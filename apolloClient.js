@@ -38,7 +38,7 @@ export default async () => {
     options: {
       reconnect: true,
       connectionParams: async () => ({
-        useridd: await AsyncStorage.getItem('token'),
+        userid: await AsyncStorage.getItem('token'),
       }),
     },
   });
