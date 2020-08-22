@@ -22,16 +22,18 @@ export default () => {
   /*const {loading: getUserLoading, data: getUserData, refetch} = useQuery(
     GETUSER,
   );
-
+  */
+  console.log('this is userInfo');
+  console.log(userInfo);
   const {
     loading: newMessageLoding,
     data: newMessageData,
     error,
   } = useSubscription(NEWMESSAGE, {
-    variables: {userId: userInfo.id},
+    variables: {userId: userInfo.user.id},
   });
   //초기 유저 데이터 userEffect
-  useEffect(() => {
+  /*useEffect(() => {
     console.log('userdata');
   }, [getUserData]);
   */
