@@ -14,7 +14,7 @@ export default ({navigation}) => {
 
   const userInfo = useUserInfo();
   const setUserState = useUserState();
-  const nickname = useInput(userInfo.nickname);
+  const nickname = useInput(userInfo.user.nickname);
 
   const changeNickName = async () => {
     const {
@@ -28,8 +28,7 @@ export default ({navigation}) => {
     console.log('edit result: ' + editUser.nickname);
 
     if (editUser) {
-      console.log(editUser.nickname);
-      setUserState(editUser);
+      setUserState(userInfo);
       navigation.navigate('EditProfile');
     }
   };
