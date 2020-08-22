@@ -18,7 +18,7 @@ export default ({navigation}) => {
   // Find index in array location
   const [visibleItem, setVisibleItem] = useState(
     location.findIndex((item, i) => {
-      return item.value === userInfo.location;
+      return item.value === userInfo.user.location;
     }),
   );
 
@@ -35,7 +35,6 @@ export default ({navigation}) => {
         dataType: 'location',
       },
     });
-
     if (editUser) {
       setUserState(editUser);
       navigation.navigate('EditProfile');
