@@ -6,7 +6,8 @@ export const AuthContext = createContext();
 export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
   const [userInfo, setUserInfo] = useState('');
-
+  const [messages, setMessages] = useState('');
+  const [loading, setLoading] = useState(true);
   const logUserIn = async (user) => {
     try {
       console.log('auth conetext: ' + user.user.id);
@@ -27,7 +28,6 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
       console.log(e);
     }
   };
-
   const setUserState = (user) => {
     console.log(user.nickname);
     console.log('modified user data');
@@ -36,7 +36,17 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
 
   return (
     <AuthContext.Provider
-      value={{isLoggedIn, logUserIn, logUserOut, userInfo, setUserState}}>
+      value={{
+        isLoggedIn,
+        logUserIn,
+        logUserOut,
+        userInfo,
+        messages,
+        setMessages,
+        loading,
+        setLoading,
+        setUserState,
+      }}>
       {children}
     </AuthContext.Provider>
   );
@@ -62,6 +72,24 @@ export const useUserInfo = () => {
   return userInfo;
 };
 
+//TODO
+export const useMessages = () => {
+  const {messages} = useContext(AuthContext);
+  return messages;
+};
+export const useSetMessages = () => {
+  const {setMessages} = useContext(AuthContext);
+  return setMessages;
+};
+//TODO
+export const useLoading = () => {
+  const {loading} = useContext(AuthContext);
+  return loading;
+};
+export const useSetLoading = () => {
+  const {setLoading} = useContext(AuthContext);
+  return setLoading;
+};
 export const useUserState = () => {
   const {setUserState} = useContext(AuthContext);
   return setUserState;
