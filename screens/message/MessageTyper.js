@@ -11,11 +11,12 @@ import constants from '../../constants';
 const View = styled.View`
   display: flex;
   flex-direction: row;
+  height: 50px;
   justify-content: center;
   align-items: center;
 `;
 
-export default () => {
+export default ({roomId, participant}) => {
   const text = useInput();
   const [newMessageMutation] = useMutation(SENDMESSAGE);
   const textValidate = () => {
@@ -29,8 +30,8 @@ export default () => {
     if (textValidate()) {
       const {loading, data} = await newMessageMutation({
         variables: {
-          roomId: 'ckdlx45en6eyz0999lcudlk7o',
-          toId: 'ckclwwp37wja80975wpqu2h75',
+          roomId: roomId,
+          toId: participant[0].itsMe ? participant[1].id : participant[0].id,
           type: 'text',
           data: text.value,
         },
@@ -40,16 +41,7 @@ export default () => {
   };
   return (
     <View>
-      <TextInput
-        style={{
-          width: constants.width / 1.2,
-          borderBottomWidth: 0.5,
-          borderBottomStyle: 'solid',
-        }}
-        type="text"
-        {...text}
-        placeholder="input your message"
-      />
+      <TextInput type="text" {...text} placeholder="input your message" />
 
       <TouchableOpacity onPress={onPress}>
         <Icon name="paper-plane" size={30} color="#55efc4" />

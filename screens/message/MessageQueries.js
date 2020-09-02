@@ -16,6 +16,9 @@ export const NEWMESSAGE = gql`
         nickname
         itsMe
       }
+      room {
+        id
+      }
       createdAt
     }
   }

@@ -14,41 +14,41 @@ import {
 import {useQuery} from 'react-apollo-hooks';
 import {SEARCH_ROOMLIST} from './RoomsQueries';
 import {useUserInfo} from '../../AuthContext';
-import {View} from 'react-native';
+import {View, TouchableOpacity, Alert} from 'react-native';
 import MessageTyper from './MessageTyper';
+
 export default ({navigation}) => {
   const userInfo = useUserInfo();
   console.log('userInfo test : ' + userInfo.rooms[0].id);
   const roomsInfo = userInfo.rooms;
   console.log(roomsInfo);
+
   return (
-    <View>
-      <MessageTyper />
-    </View>
-  );
-  /*return (
     <Container>
       <Header />
       <List>
-        {roomsInfo.map((l, i) => (
-          <ListItem avatar>
+        {roomsInfo.map((room) => (
+          <ListItem
+            key={room.id}
+            avatar
+            onPress={() => navigation.navigate('Room', {roomId: room.id})}>
             <Left>
               <Thumbnail source={{uri: 'Image URL'}} />
             </Left>
             <Body>
               <Text>
-                {l.participant[0].id === userInfo.user.id
-                  ? l.participant[1].nickname
-                  : l.participant[0].nickname}
+                {room.participant[0].id === userInfo.user.id
+                  ? room.participant[1].nickname
+                  : room.participant[0].nickname}
               </Text>
-              <Text note>자니...?</Text>
+              <Text note>{room.messages[room.messages.length - 1].data}</Text>
             </Body>
             <Right>
-              <Text note>{l.messages.updatedAt}</Text>
+              <Text note>{room.messages.updatedAt}</Text>
             </Right>
           </ListItem>
         ))}
       </List>
     </Container>
-  );*/
+  );
 };

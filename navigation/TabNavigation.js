@@ -6,19 +6,18 @@ import NavIcon from '../components/NavIcon';
 import Home from '../screens/home/Home';
 import HomeNavigation from './HomeNavigation';
 import RoomList from '../screens/message/RoomList';
-import SettingList from '../screens/setting/SettingList';
+import MessageNavigation from './MessageNavigation';
 import SettingNavigation from './SettingNavigation';
 
 const TabNavigation = createBottomTabNavigator();
 
 export default () => {
-  
   return (
     <TabNavigation.Navigator
       initialRouteName="Home"
       tabBarOptions={{showLabel: false}}>
       <TabNavigation.Screen
-        name="Home"
+        name="HomeNavigation"
         children={() => <HomeNavigation />}
         options={{
           tabBarIcon: ({focused}) => (
@@ -30,8 +29,8 @@ export default () => {
         }}
       />
       <TabNavigation.Screen
-        name="roomList"
-        component={RoomList}
+        name="MessageNavigation"
+        children={() => <MessageNavigation />}
         options={{
           tabBarIcon: ({focused}) => (
             <NavIcon

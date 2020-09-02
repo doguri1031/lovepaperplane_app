@@ -10,13 +10,17 @@ import {
   useSetMessages,
   useLoading,
   useSetLoading,
+  useSetUserInfo,
 } from '../AuthContext';
 import {GETUSER} from '../screens/home/HomeQueries';
+import Room from '../screens/message/Room';
 
 const MainNavigation = createStackNavigator();
 
 export default () => {
   const userInfo = useUserInfo();
+  const setUserInfo = useSetUserInfo();
+  const tempUserInfo = {...userInfo};
   const setMessages = useSetMessages();
   const setLoading = useSetLoading();
   /*const {loading: getUserLoading, data: getUserData, refetch} = useQuery(
@@ -40,9 +44,22 @@ export default () => {
   //메세지 데이터 useEffect
   useEffect(() => {
     console.log('subsub');
-    console.log(newMessageData);
     if (newMessageData) {
       setMessages(newMessageData.newMessage.data);
+
+      console.log(tempUserInfo.rooms);
+
+      const index = tempUserInfo.rooms.findIndex((room) => {
+        if (room.id === newMessageData.newMessage.room.id) {
+          console.log('number:' + room.messages.length);
+          return true;
+        }
+      });
+      tempUserInfo.rooms[index].messages.push({...newMessageData.newMessage});
+      console.log('number2:' + tempUserInfo.rooms[index].messages.length);
+      console.log('after add');
+      console.log(tempUserInfo.rooms);
+      setUserInfo({...tempUserInfo});
     }
   }, [newMessageData]);
 
@@ -55,6 +72,7 @@ export default () => {
     <NavigationContainer>
       <MainNavigation.Navigator headerMode="none">
         <MainNavigation.Screen name="Tab" children={() => <TabNavigation />} />
+        <MainNavigation.Screen name="Room" component={Room} />
       </MainNavigation.Navigator>
     </NavigationContainer>
   );
