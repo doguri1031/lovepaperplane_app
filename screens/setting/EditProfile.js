@@ -18,7 +18,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'user'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.nickname}
+          rightTitle={userInfo.user.username}
         />
         <ListItem
           onPress={() => navigation.navigate('EditNickName')}
@@ -34,7 +34,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'transgender'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.nickname}
+          rightTitle={userInfo.user.gender}
         />
         <ListItem
           onPress={() => navigation.navigate('EditLocation')}
@@ -42,7 +42,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'map-marker'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.nickname}
+          rightTitle={userInfo.user.location}
         />
         <ListItem
           onPress={() => navigation.navigate('EditBirthDay')}
@@ -50,7 +50,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'calendar'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.nickname}
+          rightTitle={userInfo.user.birthDate}
         />
       </View>
     </ScrollView>
