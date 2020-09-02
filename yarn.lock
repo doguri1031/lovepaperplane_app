@@ -6319,6 +6319,11 @@ react-native-gesture-handler@^1.6.1:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-image-crop-picker@^0.33.1:
+  version "0.33.1"
+  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.33.1.tgz#c7b2e6eb2fb2d0d4c3fa1dbeccf9bfc2f3e256e3"
+  integrity sha512-r4rAkpnJW3FJDx8OHMBK7XdQS4smh8o2qI3wwqYINC5i4LC4rqJgF6XGq3kxkHFKc3zRicYZFFnPyt1kEqPAGg==
+
 react-native-ionicons@^4.6.5:
   version "4.6.5"
   resolved "https://registry.yarnpkg.com/react-native-ionicons/-/react-native-ionicons-4.6.5.tgz#b792ec8896381e67ff237eba955e38afe7ceb7a4"

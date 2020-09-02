@@ -12,6 +12,7 @@ import {persistCache} from 'apollo-cache-persist';
 import {AsyncStorage} from 'react-native';
 //import { AsyncStorage } from '@react-native-community/async-storage';
 
+
 export const APOLLO_URI = 'http://0230fec44d14.ngrok.io';
 export const APOLLO_URI_WS = 'ws://0230fec44d14.ngrok.io';
 
