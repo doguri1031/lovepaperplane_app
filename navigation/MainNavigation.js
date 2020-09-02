@@ -72,7 +72,11 @@ export default () => {
     <NavigationContainer>
       <MainNavigation.Navigator headerMode="none">
         <MainNavigation.Screen name="Tab" children={() => <TabNavigation />} />
-        <MainNavigation.Screen name="Room" component={Room} />
+        <MainNavigation.Screen
+          name="Room"
+          component={Room}
+          options={{headerShown: true, headerTitle: 'ddd'}}
+        />
       </MainNavigation.Navigator>
     </NavigationContainer>
   );

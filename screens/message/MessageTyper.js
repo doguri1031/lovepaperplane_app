@@ -41,7 +41,12 @@ export default ({roomId, participant}) => {
   };
   return (
     <View>
-      <TextInput type="text" {...text} placeholder="input your message" />
+      <TextInput
+        type="text"
+        {...text}
+        style={{width: 330}}
+        placeholder="input your message"
+      />
 
       <TouchableOpacity onPress={onPress}>
         <Icon name="paper-plane" size={30} color="#55efc4" />
