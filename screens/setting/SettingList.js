@@ -33,6 +33,12 @@ export default ({navigation}) => {
           bottomDivider
         />
       </View>
+      <ListItem
+        title="신고 건수"
+        bottomDivider
+        chevron
+        onPress={() => navigation.navigate('Accusation')}
+      />
     </ScrollView>
   );
 };

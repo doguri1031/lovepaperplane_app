@@ -1,13 +1,23 @@
-import React, {useState} from 'react';
-import {TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {Keyboard, Alert, TextInput} from 'react-native';
 import {useMutation} from 'react-apollo-hooks';
 import styled from 'styled-components';
 import {Button} from '../../components/Buttons';
 import LocationSelector from '../../components/Overlay/LocationSelector';
 import LottiedLoader from '../../components/LottieLoader';
-import {Textarea} from 'native-base';
+import {
+  Header,
+  Left,
+  Body,
+  Right,
+  Title,
+  Radio,
+  Container as NativeContainer,
+} from 'native-base';
 import {CREATEROOM} from './HomeQueries';
 import useInput from '../../hooks/useInput';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {CheckBox} from 'react-native-elements';
 
 const Container = styled.View`
   display: flex;
@@ -31,6 +41,7 @@ export default ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const text = useInput('');
   const [createRoomMutation] = useMutation(CREATEROOM);
+  const textRef = useRef();
 
   const validate = () => {
     if (location === '' || location === undefined) {
@@ -59,24 +70,46 @@ export default ({navigation}) => {
     }
   };
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <>
       {loading ? (
         <LottiedLoader />
       ) : (
         <Container>
+          <Header>
+            <Left>
+              <Icon
+                name="step-backward"
+                size={24}
+                color="white"
+                onPress={() => navigation.navigate('Home')}
+              />
+            </Left>
+            <Body>
+              <Title>CREATE ROOM</Title>
+            </Body>
+            <Right></Right>
+          </Header>
+
           <Content>
-            <Text>createRoom</Text>
-          </Content>
-          <Content>
+            <Radio
+              color={'#f0ad4e'}
+              selectedColor={'#5cb85c'}
+              selected={false}
+            />
             <Text>location</Text>
             <LocationSelector location={location} setLocation={setLocation} />
           </Content>
-          <Textarea rowSpan={5} {...text} bordered placeholder="Textarea" />
-          <Content>
-            <Button text={'submit'} onPress={onSubmit} />
-          </Content>
+          <TextInput
+            style={{heigth: 150, textAlignVertical: 'top'}}
+            multiline={true}
+            numberOfLines={30}
+            autoFocus={true}
+            {...text}
+            placeholder="Textarea"
+            ref={textRef}
+          />
         </Container>
       )}
-    </TouchableWithoutFeedback>
+    </>
   );
 };

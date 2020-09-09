@@ -6,6 +6,7 @@ import SettingList from '../screens/setting/SettingList';
 import EditNickName from '../screens/setting/EditNickName';
 import EditBirthDay from '../screens/setting/EditBirthDay';
 import EditLocation from '../screens/setting/EditLocation';
+import Accusation from '../screens/setting/Accusation';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default () => {
       <Stack.Screen name="EditNickName" component={EditNickName} />
       <Stack.Screen name="EditBirthDay" component={EditBirthDay} />
       <Stack.Screen name="EditLocation" component={EditLocation} />
+      <Stack.Screen name="Accusation" component={Accusation} />
     </Stack.Navigator>
   );
 };

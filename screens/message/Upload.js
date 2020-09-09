@@ -27,14 +27,6 @@ export default () => {
     });
   };
 
-  const onSelectedImage = (image) => {
-    const source = {uri: image.path};
-    let item = {
-      id: Date.now(),
-      url: source,
-      content: image.data,
-    };
-  };
   const onPress = () => {
     ActionSheet.show(
       {
