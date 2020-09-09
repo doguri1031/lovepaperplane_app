@@ -7,7 +7,15 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {Header, Left, Body, Right, Title} from 'native-base';
+import {
+  Header,
+  Left,
+  Body,
+  Right,
+  Title,
+  Root,
+  Text as BaseText,
+} from 'native-base';
 import {useUserInfo} from '../../AuthContext';
 import MessageTyper from './MessageTyper';
 import constants from '../../constants';
@@ -33,26 +41,32 @@ const MessageBox = styled.View`
 const SendMessageWapper = styled.View`
   display: flex;
   flex-direction: row-reverse;
-  height: 20px;
+  height: auto;
   width: 100%;
 `;
 const ReceiveMesssageWrapper = styled.View`
   display: flex;
-  height: 20px;
+  flex-direction: row;
+  height: auto;
   width: 100%;
 `;
 const Message = styled.View`
-  height: 20px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 10px;
+  height: auto;
   width: auto;
-  border-radius: 5px;
-  background-color: ${(props) => props.theme.darkGreyColor};
+  max-width: ${constants.width / 2.5}px;
+  border-radius: 18px;
+
+  background-color: ${(props) => props.theme.lightGreyColor};
 `;
 
 export default ({navigation, route}) => {
   const roomId = route.params?.roomId;
   const userInfo = useUserInfo();
   const rooms = userInfo.rooms;
-
+  const user = userInfo.user;
   const selectedRoom = rooms.filter((room) => {
     if (room.id === roomId) {
       return true;
@@ -60,7 +74,7 @@ export default ({navigation, route}) => {
   });
   const room = selectedRoom[0];
   return (
-    <>
+    <Root>
       <Header>
         <Left>
           <Icon
@@ -76,6 +90,11 @@ export default ({navigation, route}) => {
               ? room.participant[1].nickname
               : room.participant[0].nickname}
           </Title>
+          <BaseText style={{color: 'white', fontSize: 12}}>
+            {room.participant[0].itsMe
+              ? room.participant[1].location
+              : room.participant[0].location}
+          </BaseText>
         </Body>
         <Right />
       </Header>
@@ -89,13 +108,25 @@ export default ({navigation, route}) => {
                 {message.from.itsMe ? (
                   <SendMessageWapper>
                     <Message>
-                      <Text>{message.data}</Text>
+                      <Text
+                        style={{
+                          maxWidth: constants.width / 2.5,
+                          fontSize: 18,
+                        }}>
+                        {message.data}
+                      </Text>
                     </Message>
                   </SendMessageWapper>
                 ) : (
                   <ReceiveMesssageWrapper>
                     <Message>
-                      <Text>{message.data}</Text>
+                      <Text
+                        style={{
+                          maxWidth: constants.width / 2.5,
+                          fontSize: 18,
+                        }}>
+                        {message.data}
+                      </Text>
                     </Message>
                   </ReceiveMesssageWrapper>
                 )}
@@ -103,8 +134,12 @@ export default ({navigation, route}) => {
             ))}
           </ScrollView>
         </TouchableWithoutFeedback>
-        <MessageTyper roomId={room.id} participant={room.participant} />
+        <MessageTyper
+          user={user}
+          roomId={room.id}
+          participant={room.participant}
+        />
       </Container>
-    </>
+    </Root>
   );
 };
