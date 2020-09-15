@@ -37,6 +37,7 @@ const Content = styled.View`
 `;
 
 export default ({navigation}) => {
+  const planeType = route.params?.planeType;
   const [location, setLocation] = useState();
   const [loading, setLoading] = useState(false);
   const text = useInput('');
@@ -46,7 +47,6 @@ export default ({navigation}) => {
   const validate = () => {
     if (location === '' || location === undefined) {
       Alert.alert('input location');
-      Alert.alert(location);
       return false;
     } else if (text.value === '') {
       Alert.alert('input textMessage');
@@ -60,7 +60,7 @@ export default ({navigation}) => {
     }
     setLoading(true);
     const {loading, data} = await createRoomMutation({
-      variables: {data: text.value, location: location},
+      variables: {planeType: planeType, data: text.value, location: location},
     });
     setTimeout(() => setLoading(false), 5000);
     if (data) {
@@ -87,7 +87,14 @@ export default ({navigation}) => {
             <Body>
               <Title>CREATE ROOM</Title>
             </Body>
-            <Right></Right>
+            <Right>
+              <Icon
+                name="step-backward"
+                size={24}
+                color="white"
+                onPress={onSubmit}
+              />
+            </Right>
           </Header>
 
           <Content>
@@ -100,7 +107,7 @@ export default ({navigation}) => {
             <LocationSelector location={location} setLocation={setLocation} />
           </Content>
           <TextInput
-            style={{heigth: 150, textAlignVertical: 'top'}}
+            style={{height: 150, textAlignVertical: 'top'}}
             multiline={true}
             numberOfLines={30}
             autoFocus={true}

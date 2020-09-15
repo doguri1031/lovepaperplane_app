@@ -55,6 +55,7 @@ export default () => {
       machineId: constants.machineId,
     },
   });
+
   const date = new Date();
   console.log(1);
   const onPressSignUp = () => {

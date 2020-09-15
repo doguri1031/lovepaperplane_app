@@ -10,7 +10,6 @@ const View = styled.View`
 `;
 const Block = styled.View`
   height: 19;
-  border-radius: 10;
   width: ${(props) =>
     (constants.width * props.airplaneNumber) / (2 * props.maxNumber)};
   background-color: #55efc4;

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import {
   Text,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
@@ -16,9 +19,15 @@ import {
   Root,
   Text as BaseText,
 } from 'native-base';
+import DropDownPicker from 'react-native-dropdown-picker';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import {Button, Overlay} from 'react-native-elements';
 import {useUserInfo} from '../../AuthContext';
 import MessageTyper from './MessageTyper';
 import constants from '../../constants';
+import useInput from '../../hooks/useInput';
+import {useMutation} from 'react-apollo-hooks';
+import {COMPLAIN} from './MessageQueries';
 const Container = styled.View`
   display: flex;
   flex-direction: column;
@@ -58,8 +67,14 @@ const Message = styled.View`
   width: auto;
   max-width: ${constants.width / 2.5}px;
   border-radius: 18px;
-
   background-color: ${(props) => props.theme.lightGreyColor};
+`;
+const PopupContainer = styled.View`
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 300px;
+  border-radius: 10px;
 `;
 
 export default ({navigation, route}) => {
@@ -67,11 +82,32 @@ export default ({navigation, route}) => {
   const userInfo = useUserInfo();
   const rooms = userInfo.rooms;
   const user = userInfo.user;
+  const repoReasonText = useInput();
+  const [repoCategory, setRepoCategory] = useState();
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [selectedMessage, setSeletedMessage] = useState();
+  const [complainMutation] = useMutation(COMPLAIN);
   const selectedRoom = rooms.filter((room) => {
     if (room.id === roomId) {
       return true;
     }
   });
+  const onComplain = async () => {
+    if (repoCategory === undefined) {
+      Alert.alert('カテゴリをご入力ください。');
+      return;
+    }
+    const complain = await complainMutation({
+      variables: {
+        messageId: selectedMessage.id,
+        toId: selectedMessage.from.id,
+        category: repoCategory,
+        comment: repoReasonText.value,
+      },
+    });
+    console.log(complain);
+    Alert.alert('complain');
+  };
   const room = selectedRoom[0];
   return (
     <Root>
@@ -119,15 +155,21 @@ export default ({navigation, route}) => {
                   </SendMessageWapper>
                 ) : (
                   <ReceiveMesssageWrapper>
-                    <Message>
-                      <Text
-                        style={{
-                          maxWidth: constants.width / 2.5,
-                          fontSize: 18,
-                        }}>
-                        {message.data}
-                      </Text>
-                    </Message>
+                    <TouchableOpacity
+                      onLongPress={() => {
+                        setSeletedMessage(message);
+                        setOverlayVisible(true);
+                      }}>
+                      <Message>
+                        <Text
+                          style={{
+                            maxWidth: constants.width / 2.5,
+                            fontSize: 18,
+                          }}>
+                          {message.data}
+                        </Text>
+                      </Message>
+                    </TouchableOpacity>
                   </ReceiveMesssageWrapper>
                 )}
               </MessageWrapper>
@@ -140,6 +182,43 @@ export default ({navigation, route}) => {
           participant={room.participant}
         />
       </Container>
+      <Overlay
+        isVisible={overlayVisible}
+        onBackdropPress={() => setOverlayVisible(false)}>
+        <PopupContainer>
+          <Text>신고하기</Text>
+          <DropDownPicker
+            items={[
+              {
+                label: 'UK',
+                value: 'uk',
+                icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
+              },
+              {
+                label: 'France',
+                value: 'france',
+                icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
+              },
+            ]}
+            containerStyle={{height: 40}}
+            style={{backgroundColor: '#fafafa'}}
+            defaultValue={repoCategory}
+            itemStyle={{
+              justifyContent: 'flex-start',
+            }}
+            dropDownStyle={{backgroundColor: '#fafafa'}}
+            onChangeItem={(item) => setRepoCategory(item.value)}
+          />
+          <TextInput
+            style={{height: 50, textAlignVertical: 'top'}}
+            multiline={true}
+            numberOfLines={5}
+            {...repoReasonText}
+            placeholder="Textarea"
+          />
+          <Button title="submit" onPress={onComplain} />
+        </PopupContainer>
+      </Overlay>
     </Root>
   );
 };

@@ -100,18 +100,18 @@ export default ({user, roomId, participant}) => {
           'cancel',
         ],
         cancelButtonIndex: 3,
-        title: `남아있는 비행기 수 : ${user.availablePlane}`,
+        title: `남아있는 비행기 수 : ${user.goldPlane}`,
       },
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            if (user.availablePlane < 1) {
+            if (user.goldPlane < 1) {
               Alert.alert('not enough plane');
             }
             takePictureFromCamera();
             break;
           case 1:
-            if (user.availablePlane < 1) {
+            if (user.goldPlane < 1) {
               Alert.alert('not enough plane');
             }
             selectImageFromGallery();
