@@ -13,7 +13,8 @@ export const ADDPLANE = gql`
       location
       machineId
       itsMe
-      availablePlane
+      normalPlane
+      goldPlane
       createdAt
       updatedAt
     }
@@ -24,7 +25,7 @@ export const CREATEROOM = gql`
   mutation createRoom($location: String!, $data: String!) {
     createRoom(location: $location, data: $data) {
       id
-      participantB {
+      participant {
         id
         username
         nickname
@@ -52,7 +53,8 @@ export const GETUSER = gql`
       location
       machineId
       itsMe
-      availablePlane
+      normalPlane
+      goldPlane
       createdAt
       updatedAt
     }

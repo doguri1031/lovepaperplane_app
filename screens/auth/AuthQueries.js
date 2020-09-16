@@ -11,7 +11,36 @@ export const LOGIN = gql`
         gender
         location
         # pushFlag
-        availablePlane
+        normalPlane
+        goldPlane
+        complainning {
+          id
+          from {
+            id
+            username
+          }
+          to {
+            id
+            username
+          }
+          messageId
+          category
+          comment
+        }
+        complainned {
+          id
+          from {
+            id
+            username
+          }
+          to {
+            id
+            username
+          }
+          messageId
+          category
+          comment
+        }
         createdAt
         updatedAt
       }

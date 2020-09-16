@@ -49,3 +49,30 @@ export const SENDMESSAGE = gql`
     }
   }
 `;
+
+export const COMPLAIN = gql`
+  mutation complain(
+    $messageId: String!
+    $toId: String!
+    $category: String!
+    $comment: String!
+  ) {
+    complain(
+      messageId: $messageId
+      toId: $toId
+      category: $category
+      comment: $comment
+    ) {
+      id
+      from {
+        id
+      }
+      to {
+        id
+      }
+      messageId
+      category
+      comment
+    }
+  }
+`;
