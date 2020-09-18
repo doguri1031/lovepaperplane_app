@@ -29,7 +29,7 @@ export default ({navigation}) => {
                 <Thumbnail source={{uri: 'Image URL'}} />
               </Left>
               <Body>
-                <Text>{room.participant[0].id === userInfo.user.id ? room.participant[1].nickname : room.participant[0].nickname}</Text>
+                <Text>{room.participant[0].id === userInfo.id ? room.participant[1].nickname : room.participant[0].nickname}</Text>
                 <Text note>{room.messages[room.messages.length - 1].data}</Text>
               </Body>
               <Right>

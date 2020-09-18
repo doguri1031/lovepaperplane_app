@@ -223,7 +223,9 @@ export default ({navigation, route}) => {
                   </SendMessageWapper>
                 ) : (
                   <ReceiveMesssageWrapper>
-                    <ReadFlg>{'기독'}</ReadFlg>
+                    <ReadFlg>
+                      <Text>{'기독'}</Text>
+                    </ReadFlg>
                     <TouchableOpacity
                       onLongPress={() => {
                         setSeletedMessage(message);
