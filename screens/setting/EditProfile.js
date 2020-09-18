@@ -18,7 +18,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'user'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.username}
+          rightTitle={userInfo.username}
         />
         <ListItem
           onPress={() => navigation.navigate('EditNickName')}
@@ -26,7 +26,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'id-card'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.nickname}
+          rightTitle={userInfo.nickname}
         />
         <ListItem
           // key={1}
@@ -34,7 +34,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'transgender'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.gender}
+          rightTitle={userInfo.gender}
         />
         <ListItem
           onPress={() => navigation.navigate('EditLocation')}
@@ -42,7 +42,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'map-marker'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.location}
+          rightTitle={userInfo.location}
         />
         <ListItem
           onPress={() => navigation.navigate('EditBirthDay')}
@@ -50,7 +50,7 @@ export default ({navigation}) => {
           leftIcon={<Icon5 name={'calendar'} size={20} color="#b0c4de" />}
           bottomDivider
           titleStyle={{color: '#aaa'}}
-          rightTitle={userInfo.user.birthDate}
+          rightTitle={userInfo.birthDate}
         />
       </View>
     </ScrollView>

@@ -1,26 +1,11 @@
 import React from 'react';
-import {
-  Container,
-  Header,
-  Tab,
-  Tabs,
-  TabHeading,
-  Content,
-  List,
-  ListItem,
-  Badge,
-  Left,
-  Body,
-  Right,
-  Thumbnail,
-  Text,
-} from 'native-base';
+import {Container, Header, Tab, Tabs, TabHeading, Content, List, ListItem, Badge, Left, Body, Right, Thumbnail, Text} from 'native-base';
 import {useUserInfo} from '../../AuthContext';
 
 export default () => {
   const userInfo = useUserInfo();
-  const complainningList = userInfo.user.complainning;
-  const complainnedList = userInfo.user.complainned;
+  const complainningList = userInfo.complainning;
+  const complainnedList = userInfo.complainned;
   const complainList = [
     {tab: '내가 저지른 신고', list: complainningList},
     {tab: '내가 당한 신고', list: complainnedList},

@@ -6,14 +6,16 @@ export const AuthContext = createContext();
 export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
   const [userInfo, setUserInfo] = useState('');
+  const [roomsInfo, setRoomsInfo] = useState([]);
   const [messages, setMessages] = useState('');
   const [loading, setLoading] = useState(true);
-  const logUserIn = async (user) => {
+  const logUserIn = async (login) => {
     try {
-      console.log('auth conetext: ' + user.user.id);
-      await AsyncStorage.setItem('token', user.user.id);
+      console.log('auth conetext: ' + login.user.id);
+      await AsyncStorage.setItem('token', login.user.id);
       await AsyncStorage.setItem('isLoggedIn', 'true');
-      setUserInfo(user);
+      setUserInfo(login.user);
+      setRoomsInfo(login.rooms);
       setIsLoggedIn(true);
     } catch (e) {
       console.log(e);
@@ -41,6 +43,8 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
         loading,
         setLoading,
         setUserInfo,
+        roomsInfo,
+        setRoomsInfo,
       }}>
       {children}
     </AuthContext.Provider>
@@ -88,4 +92,13 @@ export const useSetLoading = () => {
 export const useSetUserInfo = () => {
   const {setUserInfo} = useContext(AuthContext);
   return setUserInfo;
+};
+
+export const useRoomsInfo = () => {
+  const {roomsInfo} = useContext(AuthContext);
+  return roomsInfo;
+};
+export const useSetRoomsInfo = () => {
+  const {setRoomsInfo} = useContext(AuthContext);
+  return setRoomsInfo;
 };

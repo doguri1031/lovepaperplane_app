@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {Text, TouchableWithoutFeedback, Keyboard, ScrollView, TouchableOpacity, TextInput, Alert} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -7,12 +7,12 @@ import {Header, Left, Body, Right, Button, Title, Root, Text as BaseText} from '
 import DropDownPicker from 'react-native-dropdown-picker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {Overlay} from 'react-native-elements';
-import {useUserInfo} from '../../AuthContext';
+import {useRoomsInfo, useUserInfo} from '../../AuthContext';
 import MessageTyper from './MessageTyper';
 import constants from '../../constants';
 import useInput from '../../hooks/useInput';
 import {useMutation} from 'react-apollo-hooks';
-import {COMPLAIN} from './MessageQueries';
+import {COMPLAIN, READMESSAGE} from './MessageQueries';
 import {EXIT_ROOM} from './ExitRoomQueries';
 import Dialog from 'react-native-dialog';
 
@@ -64,6 +64,11 @@ const Message = styled.View`
   border-radius: 18px;
   background-color: ${(props) => props.theme.lightGreyColor};
 `;
+const ReadFlg = styled.View`
+  color: ${(props) => props.theme.lightGreyColor};
+  font-size: 12px;
+  padding-right: 5px;
+`;
 const PopupContainer = styled.View`
   display: flex;
   flex-direction: column;
@@ -74,9 +79,8 @@ const PopupContainer = styled.View`
 
 export default ({navigation, route}) => {
   const roomId = route.params?.roomId;
-  const userInfo = useUserInfo();
-  const rooms = userInfo.rooms;
-  const user = userInfo.user;
+  const user = useUserInfo();
+  const rooms = useRoomsInfo();
   const repoReasonText = useInput();
   const [repoCategory, setRepoCategory] = useState();
   const [overlayVisible, setOverlayVisible] = useState(false);
@@ -84,6 +88,7 @@ export default ({navigation, route}) => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [complainMutation] = useMutation(COMPLAIN);
   const [exitRoomsMutation] = useMutation(EXIT_ROOM);
+  const [readMessageMutation] = useMutation(READMESSAGE);
 
   const selectedRoom = rooms.filter((room) => {
     if (room.id === roomId) {
@@ -129,7 +134,6 @@ export default ({navigation, route}) => {
   const myBlockFlg = myBlockFlgList[0];
   console.log('yourBlockFlg :' + yourBlockFlg.flag);
 
-
   const handleExit = async () => {
     const exitRoom = await exitRoomsMutation({
       variables: {
@@ -141,7 +145,29 @@ export default ({navigation, route}) => {
     });
     console.log(exitRoom);
   };
+  const readingMessage = async () => {
+    let unreadMessageIdList = [];
+    //제일 마지막 메세지부터, 기독 or 내 메세지인지 확인하고 맞으면 for문 break;
+    for (var i = room.messages.length - 1; i >= 0; i--) {
+      if (room.messages[i].itsMe || room.messages[i].isChecked) {
+        break;
+      }
+      unreadMessageIdList.push(room.messages[i].id);
+    }
+    if (unreadMessageIdList.length > 0) {
+      console.log('ddd222');
+      console.log(unreadMessageIdList);
+      const {
+        data: {readMessage},
+      } = await readMessageMutation({variables: {unreadMessageIdList: unreadMessageIdList}});
+    }
+  };
 
+  //메세지 기독 체크
+  useEffect(() => {
+    console.log('ddd');
+    readingMessage();
+  }, []);
 
   return (
     <Root>
@@ -190,6 +216,7 @@ export default ({navigation, route}) => {
                   </SendMessageWapper>
                 ) : (
                   <ReceiveMesssageWrapper>
+                    <ReadFlg>{'기독'}</ReadFlg>
                     <TouchableOpacity
                       onLongPress={() => {
                         setSeletedMessage(message);
