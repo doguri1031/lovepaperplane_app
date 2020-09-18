@@ -1,24 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  ActivityIndicator,
-  AsyncStorage,
-  Alert,
-} from 'react-native';
+import {Text, TouchableOpacity, View, ActivityIndicator, AsyncStorage, Alert, ImageBackground, Image} from 'react-native';
 import {useQuery, useMutation} from 'react-apollo-hooks';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import admob, {
-  MaxAdContentRating,
-  InterstitialAd,
-  RewardedAd,
-  RewardedAdEventType,
-  TestIds,
-} from '@react-native-firebase/admob';
+import admob, {MaxAdContentRating, InterstitialAd, RewardedAd, RewardedAdEventType, TestIds} from '@react-native-firebase/admob';
 import {GETUSER, ADDPLANE} from './HomeQueries';
-import StatusBar from '../../components/StatusBar';
 
 // Interstitial
 InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL);
@@ -40,22 +26,16 @@ const Wrapper = styled.View`
 const Body = styled.View`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 100%;
 `;
 const PaperTypeButtons = styled.View`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  &:only-child {
-    margin: 0px 5px;
-  }
-`;
-const Square = styled.View`
-  border: 5px solid #00b894;
-  padding: 30px 30px;
-  border-radius: 100;
-  background-color: #dfe6e9;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  flex: 1;
+  margin-left: 15px;
 `;
 
 export default ({navigation}) => {
@@ -83,36 +63,54 @@ export default ({navigation}) => {
     };
   }, []);
 
-  const onCreateRoom = () => {
-    if (data.getUser.availablePlane < 1) {
+  const onCreateRoom = (planeType) => {
+    if ((planeType === 'normal' && data.getUser.normalPlane < 1) || (planeType === 'gold' && data.getUser.goldPlane < 1)) {
       Alert.alert('비행기가 없음. 광고 보세요');
       return;
     }
-    navigation.navigate('CreateRoom');
+    navigation.navigate('CreateRoom', {planeType: planeType});
   };
   return (
     <Wrapper>
       {loading ? (
         <ActivityIndicator animating={loading} color="#0000aa" size="large" />
       ) : (
-        <Body>
-          <PaperTypeButtons>
-            <TouchableOpacity onPress={onCreateRoom}>
-              <Square>
-                <Icon
-                  style={{marginRight: 10}}
-                  name="paper-plane"
-                  size={120}
-                  color="#55efc4"
-                />
-              </Square>
+        <ImageBackground
+          source={require('../../images/skytoon.jpg')}
+          style={{
+            flex: 1,
+            // remove width and height to override fixed static size
+            width: '100%',
+            height: null,
+          }}>
+          <PaperTypeButtons style={{marginTop: 20}}>
+            <TouchableOpacity onPress={() => onCreateRoom('normal')}>
+              <Icon style={{marginRight: 10}} name="paper-plane" size={30} color="#55efc4" />
+              <Text>{`${data.getUser.normalPlane}  / 3 개`}</Text>
             </TouchableOpacity>
           </PaperTypeButtons>
-          <StatusBar
-            airplaneNumber={data.getUser.availablePlane}
-            maxNumber={10}
-          />
-          <Text>{`${data.getUser.availablePlane}  / 10 개`}</Text>
+          <PaperTypeButtons>
+            <TouchableOpacity onPress={() => onCreateRoom('gold')}>
+              <Icon style={{marginRight: 10}} name="paper-plane" size={30} color="#f1c40f" />
+              <Text>{`${data.getUser.goldPlane}  / 10 개`}</Text>
+            </TouchableOpacity>
+          </PaperTypeButtons>
+          <PaperTypeButtons></PaperTypeButtons>
+          <PaperTypeButtons></PaperTypeButtons>
+          <PaperTypeButtons></PaperTypeButtons>
+          <PaperTypeButtons style={{flexDirection: 'row-reverse'}}>
+            <TouchableOpacity>
+              <Image
+                source={require('../../images/postbox.png')}
+                style={{
+                  flex: 1,
+                  // remove width and height to override fixed static size
+                  width: 40,
+                  height: null,
+                }}
+              />
+            </TouchableOpacity>
+          </PaperTypeButtons>
           {adLoaded && (
             <TouchableOpacity
               onPress={() => {
@@ -121,7 +119,7 @@ export default ({navigation}) => {
               <Text>{'보상광고'}</Text>
             </TouchableOpacity>
           )}
-        </Body>
+        </ImageBackground>
       )}
     </Wrapper>
   );

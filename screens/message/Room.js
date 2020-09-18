@@ -1,58 +1,53 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
-import {
-  Text,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-  Header,
-  Left,
-  Body,
-  Right,
-  Title,
-  Root,
-  Text as BaseText,
-} from 'native-base';
-import {
-  useUserInfo
-} from '../../AuthContext';
+import {Text, TouchableWithoutFeedback, Keyboard, ScrollView, TouchableOpacity, TextInput, Alert} from 'react-native';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import {Header, Left, Body, Right, Button, Title, Root, Text as BaseText} from 'native-base';
+import DropDownPicker from 'react-native-dropdown-picker';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import {Overlay} from 'react-native-elements';
+import {useUserInfo} from '../../AuthContext';
 import MessageTyper from './MessageTyper';
 import constants from '../../constants';
-const Container = styled.View `
+import useInput from '../../hooks/useInput';
+import {useMutation} from 'react-apollo-hooks';
+import {COMPLAIN} from './MessageQueries';
+import {EXIT_ROOM} from './ExitRoomQueries';
+import Dialog from 'react-native-dialog';
+
+const Container = styled.View`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   flex: 1;
 `;
-const MessageWrapper = styled.View `
+const MessageWrapper = styled.View`
   margin: 10px 5px;
   padding: 0px 8px;
   width: 100%;
 `;
-const MessageBox = styled.View `
+const MessageBox = styled.View`
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100%;
   width: 100%;
 `;
-const SendMessageWapper = styled.View `
+const SendMessageWapper = styled.View`
   display: flex;
   flex-direction: row-reverse;
   height: auto;
   width: 100%;
 `;
-const ReceiveMesssageWrapper = styled.View `
+const ReceiveMesssageWrapper = styled.View`
   display: flex;
   flex-direction: row;
   height: auto;
   width: 100%;
 `;
-const Message = styled.View `
+const Message = styled.View`
   display: flex;
   justify-content: center;
   padding: 10px 10px;
@@ -60,133 +55,195 @@ const Message = styled.View `
   width: auto;
   max-width: ${constants.width / 2.5}px;
   border-radius: 18px;
-
   background-color: ${(props) => props.theme.lightGreyColor};
 `;
+const PopupContainer = styled.View`
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 300px;
+  border-radius: 10px;
+`;
 
-export default ({
-  navigation,
-  route
-}) => {
-  const roomId = route.params ? .roomId;
+export default ({navigation, route}) => {
+  const roomId = route.params?.roomId;
   const userInfo = useUserInfo();
   const rooms = userInfo.rooms;
   const user = userInfo.user;
+  const repoReasonText = useInput();
+  const [repoCategory, setRepoCategory] = useState();
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [selectedMessage, setSeletedMessage] = useState();
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [complainMutation] = useMutation(COMPLAIN);
+  const [exitRoomsMutation] = useMutation(EXIT_ROOM);
+
   const selectedRoom = rooms.filter((room) => {
     if (room.id === roomId) {
       return true;
     }
   });
+  const onComplain = async () => {
+    if (repoCategory === undefined) {
+      Alert.alert('カテゴリをご入力ください。');
+      return;
+    }
+    const complain = await complainMutation({
+      variables: {
+        messageId: selectedMessage.id,
+        toId: selectedMessage.from.id,
+        category: repoCategory,
+        comment: repoReasonText.value,
+      },
+    });
+    console.log(complain);
+    Alert.alert('complain');
+  };
+
+  const showDialog = () => {
+    setDialogVisible(true);
+  };
+
+  const handleCancel = () => {
+    setDialogVisible(false);
+  };
+
   const room = selectedRoom[0];
-  return ( <
-    Root >
-    <
-    Header >
-    <
-    Left >
-    <
-    Icon name = "step-backward"
-    size = {
-      24
+
+  let yourBlockFlg;
+  const myBlockFlgList = room.blockFlg.filter((flg) => {
+    if (flg.fromId === user.id) {
+      return true;
+    } else {
+      yourBlockFlg = flg;
     }
-    color = "white"
-    onPress = {
-      () => navigation.navigate('RoomList')
-    }
-    /> < /
-    Left > <
-    Body >
-    <
-    Title > {
-      room.participant[0].itsMe ?
-      room.participant[1].nickname : room.participant[0].nickname
-    } <
-    /Title> <
-    BaseText style = {
-      {
-        color: 'white',
-        fontSize: 12
-      }
-    } > {
-      room.participant[0].itsMe ?
-      room.participant[1].location : room.participant[0].location
-    } <
-    /BaseText> < /
-    Body > <
-    Right / >
-    <
-    /Header> <
-    Container >
-    <
-    TouchableWithoutFeedback onPress = {
-      Keyboard.dismiss
-    } >
-    <
-    ScrollView style = {
-      {
-        backgroundColor: '#81ecec'
-      }
-    }
-    contentContainerStyle = {
-      {
-        flexDirection: 'row',
-        flexWrap: 'wrap'
-      }
-    } > {
-      room.messages.map((message) => ( <
-        MessageWrapper key = {
-          message.id
-        } > {
-          message.from.itsMe ? ( <
-            SendMessageWapper >
-            <
-            Message >
-            <
-            Text style = {
+  });
+  const myBlockFlg = myBlockFlgList[0];
+  console.log('yourBlockFlg :' + yourBlockFlg.flag);
+
+  const handleExit = async () => {
+    const exitRoom = await exitRoomsMutation({
+      variables: {
+        userId: user,
+        roomId: room.id,
+        blockId: myBlockFlg.id,
+        toId: room.participant[0].itsMe ? room.participant[1].id : room.participant[0].id,
+      },
+    });
+    console.log(exitRoom);
+  };
+
+  return (
+    <Root>
+      <Header>
+        <Left>
+          <FontAwesomeIcon name="step-backward" size={24} color="white" onPress={() => navigation.navigate('RoomList')} />
+        </Left>
+        <Body>
+          <Title>{room.participant[0].itsMe ? room.participant[1].nickname : room.participant[0].nickname}</Title>
+          <BaseText
+            style={{
+              color: 'white',
+              fontSize: 12,
+            }}>
+            {room.participant[0].itsMe ? room.participant[1].location : room.participant[0].location}
+          </BaseText>
+        </Body>
+        <Right />
+        <Right>
+          <Button transparent onPress={() => showDialog()}>
+            <EntypoIcon name="log-out" size={24} />
+          </Button>
+        </Right>
+      </Header>
+      <Container>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            style={{backgroundColor: '#81ecec'}}
+            contentContainerStyle={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}>
+            {room.messages.map((message) => (
+              <MessageWrapper key={message.id}>
+                {message.from.itsMe ? (
+                  <SendMessageWapper>
+                    <Message>
+                      <Text
+                        style={{
+                          maxWidth: constants.width / 2.5,
+                          fontSize: 18,
+                        }}>
+                        {message.data}
+                      </Text>
+                    </Message>
+                  </SendMessageWapper>
+                ) : (
+                  <ReceiveMesssageWrapper>
+                    <TouchableOpacity
+                      onLongPress={() => {
+                        setSeletedMessage(message);
+                        setOverlayVisible(true);
+                      }}>
+                      <Message>
+                        <Text
+                          style={{
+                            maxWidth: constants.width / 2.5,
+                            fontSize: 18,
+                          }}>
+                          {message.data}
+                        </Text>
+                      </Message>
+                    </TouchableOpacity>
+                  </ReceiveMesssageWrapper>
+                )}
+              </MessageWrapper>
+            ))}
+          </ScrollView>
+        </TouchableWithoutFeedback>
+        <MessageTyper user={user} roomId={room.id} participant={room.participant} />
+      </Container>
+      <Overlay isVisible={overlayVisible} onBackdropPress={() => setOverlayVisible(false)}>
+        <PopupContainer>
+          <Text>신고하기</Text>
+          <DropDownPicker
+            items={[
               {
-                maxWidth: constants.width / 2.5,
-                fontSize: 18,
-              }
-            } > {
-              message.data
-            } <
-            /Text> < /
-            Message > <
-            /SendMessageWapper>
-          ) : ( <
-            ReceiveMesssageWrapper >
-            <
-            Message >
-            <
-            Text style = {
+                label: 'UK',
+                value: 'uk',
+                icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
+              },
               {
-                maxWidth: constants.width / 2.5,
-                fontSize: 18,
-              }
-            } > {
-              message.data
-            } <
-            /Text> < /
-            Message > <
-            /ReceiveMesssageWrapper>
-          )
-        } <
-        /MessageWrapper>
-      ))
-    } <
-    /ScrollView> < /
-    TouchableWithoutFeedback > <
-    MessageTyper user = {
-      user
-    }
-    roomId = {
-      room.id
-    }
-    participant = {
-      room.participant
-    }
-    /> < /
-    Container > <
-    /Root>
+                label: 'France',
+                value: 'france',
+                icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
+              },
+            ]}
+            containerStyle={{height: 40}}
+            style={{backgroundColor: '#fafafa'}}
+            defaultValue={repoCategory}
+            itemStyle={{justifyContent: 'flex-start'}}
+            dropDownStyle={{backgroundColor: '#fafafa'}}
+            onChangeItem={(item) => setRepoCategory(item.value)}
+          />
+          <TextInput
+            style={{
+              height: 50,
+              textAlignVertical: 'top',
+            }}
+            multiline={true}
+            numberOfLines={5}
+            {...repoReasonText}
+            placeholder="Textarea"
+          />
+          <Button title="submit" onPress={onComplain} />
+        </PopupContainer>
+      </Overlay>
+      <Dialog.Container visible={dialogVisible}>
+        <Dialog.Description>チャットから退出しますか</Dialog.Description>
+        <Dialog.Button label="退出" onPress={handleExit} />
+        <Dialog.Button color="red" label="キャンセール" onPress={handleCancel} />
+      </Dialog.Container>
+    </Root>
   );
 };
