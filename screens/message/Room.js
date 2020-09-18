@@ -129,19 +129,24 @@ export default ({navigation, route}) => {
   const myBlockFlg = myBlockFlgList[0];
   console.log('yourBlockFlg :' + yourBlockFlg.flag);
 
-
   const handleExit = async () => {
-    const exitRoom = await exitRoomsMutation({
+    const {
+      data: {exitRoom},
+    } = await exitRoomsMutation({
       variables: {
-        userId: user,
+        userId: user.id,
         roomId: room.id,
         blockId: myBlockFlg.id,
         toId: room.participant[0].itsMe ? room.participant[1].id : room.participant[0].id,
       },
     });
-    console.log(exitRoom);
+    if (exitRoom) {
+      console.log('success exit room');
+      navigation.navigate('RoomList');
+    } else {
+      console.log('err man');
+    }
   };
-
 
   return (
     <Root>
