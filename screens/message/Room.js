@@ -47,6 +47,13 @@ const ReceiveMesssageWrapper = styled.View`
   height: auto;
   width: 100%;
 `;
+const ExitMesssageWrapper = styled.View`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  width: 100%;
+`;
 const Message = styled.View`
   display: flex;
   justify-content: center;
@@ -90,6 +97,7 @@ export default ({navigation, route}) => {
     }
     const complain = await complainMutation({
       variables: {
+        blockFlgId: myBlockFlg.id,
         messageId: selectedMessage.id,
         toId: selectedMessage.from.id,
         category: repoCategory,
@@ -121,6 +129,7 @@ export default ({navigation, route}) => {
   const myBlockFlg = myBlockFlgList[0];
   console.log('yourBlockFlg :' + yourBlockFlg.flag);
 
+
   const handleExit = async () => {
     const exitRoom = await exitRoomsMutation({
       variables: {
@@ -132,6 +141,7 @@ export default ({navigation, route}) => {
     });
     console.log(exitRoom);
   };
+
 
   return (
     <Root>
@@ -199,6 +209,19 @@ export default ({navigation, route}) => {
                 )}
               </MessageWrapper>
             ))}
+            {yourBlockFlg.flag && (
+              <ExitMesssageWrapper>
+                <Message>
+                  <Text
+                    style={{
+                      maxWidth: constants.width / 2.5,
+                      fontSize: 18,
+                    }}>
+                    {'상대방이 채팅방을 나갔습니다.'}
+                  </Text>
+                </Message>
+              </ExitMesssageWrapper>
+            )}
           </ScrollView>
         </TouchableWithoutFeedback>
         <MessageTyper user={user} roomId={room.id} participant={room.participant} />

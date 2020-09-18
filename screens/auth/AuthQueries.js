@@ -74,6 +74,12 @@ export const LOGIN = gql`
           updatedAt
         }
         isAlive
+        blockFlg {
+          id
+          fromId
+          toId
+          flag
+        }
         createdAt
         updatedAt
       }
