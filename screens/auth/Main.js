@@ -37,11 +37,7 @@ export default ({navigation}) => {
   return (
     <View>
       <LottieContainer>
-        <LottieView
-          source={require('../../lottie/message-received.json')}
-          autoPlay
-          loop
-        />
+        <LottieView source={require('../../lottie/message-received.json')} autoPlay loop />
       </LottieContainer>
       <Text>Main</Text>
       <Button text="login" onPress={onLoginPress} />

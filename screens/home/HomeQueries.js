@@ -22,8 +22,8 @@ export const ADDPLANE = gql`
 `;
 
 export const CREATEROOM = gql`
-  mutation createRoom($location: String!, $data: String!) {
-    createRoom(location: $location, data: $data) {
+  mutation createRoom($planeType: String!, $location: String!, $data: String!) {
+    createRoom(planeType: $planeType, location: $location, data: $data) {
       id
       participant {
         id

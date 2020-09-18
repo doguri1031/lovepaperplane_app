@@ -5,15 +5,7 @@ import styled from 'styled-components';
 import {Button} from '../../components/Buttons';
 import LocationSelector from '../../components/Overlay/LocationSelector';
 import LottiedLoader from '../../components/LottieLoader';
-import {
-  Header,
-  Left,
-  Body,
-  Right,
-  Title,
-  Radio,
-  Container as NativeContainer,
-} from 'native-base';
+import {Header, Left, Body, Right, Title, Radio, Container as NativeContainer} from 'native-base';
 import {CREATEROOM} from './HomeQueries';
 import useInput from '../../hooks/useInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -36,7 +28,7 @@ const Content = styled.View`
   width: 100%;
 `;
 
-export default ({navigation}) => {
+export default ({navigation, route}) => {
   const planeType = route.params?.planeType;
   const [location, setLocation] = useState();
   const [loading, setLoading] = useState(false);
@@ -77,44 +69,22 @@ export default ({navigation}) => {
         <Container>
           <Header>
             <Left>
-              <Icon
-                name="step-backward"
-                size={24}
-                color="white"
-                onPress={() => navigation.navigate('Home')}
-              />
+              <Icon name="step-backward" size={24} color="white" onPress={() => navigation.navigate('Home')} />
             </Left>
             <Body>
               <Title>CREATE ROOM</Title>
             </Body>
             <Right>
-              <Icon
-                name="step-backward"
-                size={24}
-                color="white"
-                onPress={onSubmit}
-              />
+              <Icon name="step-backward" size={24} color="white" onPress={onSubmit} />
             </Right>
           </Header>
 
           <Content>
-            <Radio
-              color={'#f0ad4e'}
-              selectedColor={'#5cb85c'}
-              selected={false}
-            />
+            <Radio color={'#f0ad4e'} selectedColor={'#5cb85c'} selected={false} />
             <Text>location</Text>
             <LocationSelector location={location} setLocation={setLocation} />
           </Content>
-          <TextInput
-            style={{height: 150, textAlignVertical: 'top'}}
-            multiline={true}
-            numberOfLines={30}
-            autoFocus={true}
-            {...text}
-            placeholder="Textarea"
-            ref={textRef}
-          />
+          <TextInput style={{height: 150, textAlignVertical: 'top'}} multiline={true} numberOfLines={30} autoFocus={true} {...text} placeholder="Textarea" ref={textRef} />
         </Container>
       )}
     </>

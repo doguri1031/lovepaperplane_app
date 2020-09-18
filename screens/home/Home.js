@@ -1,24 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  ActivityIndicator,
-  AsyncStorage,
-  Alert,
-  ImageBackground,
-  Image,
-} from 'react-native';
+import {Text, TouchableOpacity, View, ActivityIndicator, AsyncStorage, Alert, ImageBackground, Image} from 'react-native';
 import {useQuery, useMutation} from 'react-apollo-hooks';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import admob, {
-  MaxAdContentRating,
-  InterstitialAd,
-  RewardedAd,
-  RewardedAdEventType,
-  TestIds,
-} from '@react-native-firebase/admob';
+import admob, {MaxAdContentRating, InterstitialAd, RewardedAd, RewardedAdEventType, TestIds} from '@react-native-firebase/admob';
 import {GETUSER, ADDPLANE} from './HomeQueries';
 
 // Interstitial
@@ -79,10 +64,7 @@ export default ({navigation}) => {
   }, []);
 
   const onCreateRoom = (planeType) => {
-    if (
-      (planeType === 'normal' && data.getUser.normalPlane < 1) ||
-      (planeType === 'gold' && data.getUser.goldPlane < 1)
-    ) {
+    if ((planeType === 'normal' && data.getUser.normalPlane < 1) || (planeType === 'gold' && data.getUser.goldPlane < 1)) {
       Alert.alert('비행기가 없음. 광고 보세요');
       return;
     }
@@ -103,23 +85,13 @@ export default ({navigation}) => {
           }}>
           <PaperTypeButtons style={{marginTop: 20}}>
             <TouchableOpacity onPress={() => onCreateRoom('normal')}>
-              <Icon
-                style={{marginRight: 10}}
-                name="paper-plane"
-                size={30}
-                color="#55efc4"
-              />
+              <Icon style={{marginRight: 10}} name="paper-plane" size={30} color="#55efc4" />
               <Text>{`${data.getUser.normalPlane}  / 3 개`}</Text>
             </TouchableOpacity>
           </PaperTypeButtons>
           <PaperTypeButtons>
             <TouchableOpacity onPress={() => onCreateRoom('gold')}>
-              <Icon
-                style={{marginRight: 10}}
-                name="paper-plane"
-                size={30}
-                color="#f1c40f"
-              />
+              <Icon style={{marginRight: 10}} name="paper-plane" size={30} color="#f1c40f" />
               <Text>{`${data.getUser.goldPlane}  / 10 개`}</Text>
             </TouchableOpacity>
           </PaperTypeButtons>

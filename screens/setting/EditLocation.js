@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, userInput, useRef} from 'react';
 import {TouchableOpacity, View, ScrollView} from 'react-native';
 import {useQuery, useMutation} from 'react-apollo-hooks';
@@ -51,32 +52,11 @@ export default ({navigation}) => {
             alignSelf: 'center',
           }}>
           {location.map((l, i) => (
-            <ListItem
-              key={i}
-              title={l.value}
-              bottomDivider
-              rightIcon={
-                visibleItem === i ? (
-                  <Icon5 name={'check'} size={20} color="#9de500" />
-                ) : (
-                  ''
-                )
-              }
-              onPress={() => toggleMenu(i)}
-            />
+            <ListItem key={i} title={l.value} bottomDivider rightIcon={visibleItem === i ? <Icon5 name={'check'} size={20} color="#9de500" /> : ''} onPress={() => toggleMenu(i)} />
           ))}
         </View>
       </ScrollView>
-      <Button
-        title="Location Submit"
-        onPress={() => changeLocation()}
-        style={{
-          marginTop: 15,
-          width: '70%',
-          height: '30%',
-          alignSelf: 'center',
-        }}
-      />
+      <Button title="Location Submit" onPress={() => changeLocation()} style={{marginTop: 15, width: '70%', height: '30%', alignSelf: 'center'}} />
     </View>
   );
 };

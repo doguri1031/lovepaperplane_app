@@ -1,16 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Container,
-  Header,
-  Content,
-  List,
-  ListItem,
-  Left,
-  Body,
-  Right,
-  Thumbnail,
-  Text,
-} from 'native-base';
+import {Container, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text} from 'native-base';
 import {useQuery} from 'react-apollo-hooks';
 import {SEARCH_ROOMLIST} from './RoomsQueries';
 import {useUserInfo} from '../../AuthContext';
@@ -28,19 +17,12 @@ export default ({navigation}) => {
       <Header />
       <List>
         {roomsInfo.map((room) => (
-          <ListItem
-            key={room.id}
-            avatar
-            onPress={() => navigation.navigate('Room', {roomId: room.id})}>
+          <ListItem key={room.id} avatar onPress={() => navigation.navigate('Room', {roomId: room.id})}>
             <Left>
               <Thumbnail source={{uri: 'Image URL'}} />
             </Left>
             <Body>
-              <Text>
-                {room.participant[0].id === userInfo.user.id
-                  ? room.participant[1].nickname
-                  : room.participant[0].nickname}
-              </Text>
+              <Text>{room.participant[0].id === userInfo.user.id ? room.participant[1].nickname : room.participant[0].nickname}</Text>
               <Text note>{room.messages[room.messages.length - 1].data}</Text>
             </Body>
             <Right>
