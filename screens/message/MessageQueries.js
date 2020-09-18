@@ -1,6 +1,6 @@
 import {gql} from 'apollo-boost';
 
-export const NEWMESSAGE = gql `
+export const NEWMESSAGE = gql`
   subscription newMessage($userId: String!) {
     newMessage(userId: $userId) {
       id
@@ -24,7 +24,7 @@ export const NEWMESSAGE = gql `
   }
 `;
 
-export const SENDMESSAGE = gql `
+export const SENDMESSAGE = gql`
   mutation sendMessage($roomId: String, $toId: String, $type: String, $data: String) {
     sendMessage(roomId: $roomId, toId: $toId, type: $type, data: $data) {
       id
@@ -46,20 +46,8 @@ export const SENDMESSAGE = gql `
 `;
 
 export const COMPLAIN = gql`
-  mutation complain(
-    $blockFlgId: String!
-    $messageId: String!
-    $toId: String!
-    $category: String!
-    $comment: String!
-  ) {
-    complain(
-      blockFlgId: $blockFlgId
-      messageId: $messageId
-      toId: $toId
-      category: $category
-      comment: $comment
-    ) {
+  mutation complain($blockFlgId: String!, $messageId: String!, $toId: String!, $category: String!, $comment: String!) {
+    complain(blockFlgId: $blockFlgId, messageId: $messageId, toId: $toId, category: $category, comment: $comment) {
       id
       from {
         id
@@ -71,5 +59,11 @@ export const COMPLAIN = gql`
       category
       comment
     }
+  }
+`;
+
+export const READMESSAGE = gql`
+  mutation readMessage($unreadMessageIdList: [String]!) {
+    readMessage(unreadMessageIdList: $unreadMessageIdList)
   }
 `;

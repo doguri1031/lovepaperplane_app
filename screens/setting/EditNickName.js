@@ -6,19 +6,14 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
-import {
-  useUserInfo,
-  useSetLoading,
-  useSetUserInfo,
-  AuthContext,
-} from '../../AuthContext';
+import {useUserInfo, useSetLoading, useSetUserInfo, AuthContext} from '../../AuthContext';
 import {MODIFY_NICKNAME} from './EditQueries';
 
 export default ({navigation}) => {
   const [modifyNickNameMutation] = useMutation(MODIFY_NICKNAME);
   const userInfo = useUserInfo();
   const setUserInfo = useSetUserInfo();
-  const nickname = useInput(userInfo.user.nickname);
+  const nickname = useInput(userInfo.nickname);
   const changeNickName = async () => {
     const {
       data: {editUser},
@@ -40,11 +35,7 @@ export default ({navigation}) => {
     <ScrollView>
       <Text style={{alignSelf: 'center', margin: 20}}>Edit NickName</Text>
       <Input {...nickname} name="nickname"></Input>
-      <Button
-        title="NickName Submit"
-        onPress={() => changeNickName()}
-        style={{margin: 30}}
-      />
+      <Button title="NickName Submit" onPress={() => changeNickName()} style={{margin: 30}} />
     </ScrollView>
   );
 };

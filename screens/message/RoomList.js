@@ -2,15 +2,14 @@ import React, {Component} from 'react';
 import {Container, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text} from 'native-base';
 import {useQuery} from 'react-apollo-hooks';
 import {SEARCH_ROOMLIST} from './RoomsQueries';
-import {useUserInfo} from '../../AuthContext';
+import {useRoomsInfo, useUserInfo} from '../../AuthContext';
 import {View, TouchableOpacity, Alert} from 'react-native';
 import MessageTyper from './MessageTyper';
 import styled from 'styled-components';
 
 export default ({navigation}) => {
   const userInfo = useUserInfo();
-  const roomsInfo = userInfo.rooms;
-  console.log(roomsInfo);
+  const roomsInfo = useRoomsInfo();
 
   const NotList = styled.View`
     display: flex;
