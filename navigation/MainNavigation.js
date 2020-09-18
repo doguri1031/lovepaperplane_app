@@ -5,14 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import TabNavigation from './TabNavigation';
 import {useSubscription} from 'react-apollo-hooks';
 import {NEWMESSAGE} from '../screens/message/MessageQueries';
-import {
-  useUserInfo,
-  useSetMessages,
-  useLoading,
-  useSetLoading,
-  useSetUserInfo,
-} from '../AuthContext';
-import {GETUSER} from '../screens/home/HomeQueries';
+import {useUserInfo, useSetMessages, useLoading, useSetLoading, useSetUserInfo, useRoomsInfo, useSetRoomsInfo} from '../AuthContext';
 import Room from '../screens/message/Room';
 
 const MainNavigation = createStackNavigator();
@@ -23,18 +16,17 @@ export default () => {
   const tempUserInfo = {...userInfo};
   const setMessages = useSetMessages();
   const setLoading = useSetLoading();
+  const roomsInfo = useRoomsInfo();
+  const tempRoomsInfo = {...roomsInfo};
+  const setRoomsInfo = useSetRoomsInfo();
   /*const {loading: getUserLoading, data: getUserData, refetch} = useQuery(
     GETUSER,
   );
   */
   console.log('this is userInfo');
-  console.log(userInfo.user.id);
-  const {
-    loading: newMessageLoding,
-    data: newMessageData,
-    error,
-  } = useSubscription(NEWMESSAGE, {
-    variables: {userId: userInfo.user.id},
+  console.log(userInfo.id);
+  const {loading: newMessageLoding, data: newMessageData, error} = useSubscription(NEWMESSAGE, {
+    variables: {userId: userInfo.id},
   });
   //초기 유저 데이터 userEffect
   /*useEffect(() => {
@@ -47,19 +39,19 @@ export default () => {
     if (newMessageData) {
       setMessages(newMessageData.newMessage.data);
 
-      console.log(tempUserInfo.rooms);
+      console.log(tempRoomsInfo);
 
-      const index = tempUserInfo.rooms.findIndex((room) => {
+      const index = tempRoomsInfo.findIndex((room) => {
         if (room.id === newMessageData.newMessage.room.id) {
           console.log('number:' + room.messages.length);
           return true;
         }
       });
-      tempUserInfo.rooms[index].messages.push({...newMessageData.newMessage});
-      console.log('number2:' + tempUserInfo.rooms[index].messages.length);
+      tempRoomsInfo[index].messages.push({...newMessageData.newMessage});
+      console.log('number2:' + tempRoomsInfo[index].messages.length);
       console.log('after add');
-      console.log(tempUserInfo.rooms);
-      setUserInfo({...tempUserInfo});
+      console.log(tempRoomsInfo);
+      setUserInfo({...tempRoomsInfo});
     }
   }, [newMessageData]);
 
@@ -72,11 +64,7 @@ export default () => {
     <NavigationContainer>
       <MainNavigation.Navigator headerMode="none">
         <MainNavigation.Screen name="Tab" children={() => <TabNavigation />} />
-        <MainNavigation.Screen
-          name="Room"
-          component={Room}
-          options={{headerShown: true, headerTitle: 'ddd'}}
-        />
+        <MainNavigation.Screen name="Room" component={Room} options={{headerShown: true, headerTitle: 'ddd'}} />
       </MainNavigation.Navigator>
     </NavigationContainer>
   );
