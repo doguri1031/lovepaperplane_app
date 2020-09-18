@@ -12,8 +12,10 @@ import {persistCache} from 'apollo-cache-persist';
 import {AsyncStorage} from 'react-native';
 //import { AsyncStorage } from '@react-native-community/async-storage';
 
+
 export const APOLLO_URI = 'http://8b3479eefbf6.ngrok.io';
 export const APOLLO_URI_WS = 'ws://8b3479eefbf6.ngrok.io';
+
 
 const authLink = setContext(async (_, {headers}) => {
   const token = await AsyncStorage.getItem('token');
@@ -52,22 +54,14 @@ export default async () => {
   const client = new ApolloClient({
     link: ApolloLink.from([
       onError(({graphQLErrors, networkError}) => {
-        if (graphQLErrors)
-          graphQLErrors.forEach(({message, locations, path}) =>
-            console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-            ),
-          );
+        if (graphQLErrors) graphQLErrors.forEach(({message, locations, path}) => console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`));
         if (networkError) console.log(`[Network error]: ${networkError}`);
       }),
       split(
         // split based on operation type
         ({query}) => {
           const definition = getMainDefinition(query);
-          return (
-            definition.kind === 'OperationDefinition' &&
-            definition.operation === 'subscription'
-          );
+          return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
         },
         wsLink,
         authLink.concat(httpLink),

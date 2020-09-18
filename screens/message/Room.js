@@ -1,33 +1,21 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import {
-  Text,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-  Header,
-  Left,
-  Body,
-  Right,
-  Title,
-  Root,
-  Text as BaseText,
-} from 'native-base';
+import {Text, TouchableWithoutFeedback, Keyboard, ScrollView, TouchableOpacity, TextInput, Alert} from 'react-native';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import {Header, Left, Body, Right, Button, Title, Root, Text as BaseText} from 'native-base';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {Button, Overlay} from 'react-native-elements';
+import {Overlay} from 'react-native-elements';
 import {useUserInfo} from '../../AuthContext';
 import MessageTyper from './MessageTyper';
 import constants from '../../constants';
 import useInput from '../../hooks/useInput';
 import {useMutation} from 'react-apollo-hooks';
 import {COMPLAIN} from './MessageQueries';
+import {EXIT_ROOM} from './ExitRoomQueries';
+import Dialog from 'react-native-dialog';
+
 const Container = styled.View`
   display: flex;
   flex-direction: column;
@@ -93,7 +81,10 @@ export default ({navigation, route}) => {
   const [repoCategory, setRepoCategory] = useState();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [selectedMessage, setSeletedMessage] = useState();
+  const [dialogVisible, setDialogVisible] = useState(false);
   const [complainMutation] = useMutation(COMPLAIN);
+  const [exitRoomsMutation] = useMutation(EXIT_ROOM);
+
   const selectedRoom = rooms.filter((room) => {
     if (room.id === roomId) {
       return true;
@@ -116,7 +107,17 @@ export default ({navigation, route}) => {
     console.log(complain);
     Alert.alert('complain');
   };
+
+  const showDialog = () => {
+    setDialogVisible(true);
+  };
+
+  const handleCancel = () => {
+    setDialogVisible(false);
+  };
+
   const room = selectedRoom[0];
+
   let yourBlockFlg;
   const myBlockFlgList = room.blockFlg.filter((flg) => {
     if (flg.fromId === user.id) {
@@ -127,36 +128,52 @@ export default ({navigation, route}) => {
   });
   const myBlockFlg = myBlockFlgList[0];
   console.log('yourBlockFlg :' + yourBlockFlg.flag);
+
+
+  const handleExit = async () => {
+    const exitRoom = await exitRoomsMutation({
+      variables: {
+        userId: user,
+        roomId: room.id,
+        blockId: myBlockFlg.id,
+        toId: room.participant[0].itsMe ? room.participant[1].id : room.participant[0].id,
+      },
+    });
+    console.log(exitRoom);
+  };
+
+
   return (
     <Root>
       <Header>
         <Left>
-          <Icon
-            name="step-backward"
-            size={24}
-            color="white"
-            onPress={() => navigation.navigate('RoomList')}
-          />
+          <FontAwesomeIcon name="step-backward" size={24} color="white" onPress={() => navigation.navigate('RoomList')} />
         </Left>
         <Body>
-          <Title>
-            {room.participant[0].itsMe
-              ? room.participant[1].nickname
-              : room.participant[0].nickname}
-          </Title>
-          <BaseText style={{color: 'white', fontSize: 12}}>
-            {room.participant[0].itsMe
-              ? room.participant[1].location
-              : room.participant[0].location}
+          <Title>{room.participant[0].itsMe ? room.participant[1].nickname : room.participant[0].nickname}</Title>
+          <BaseText
+            style={{
+              color: 'white',
+              fontSize: 12,
+            }}>
+            {room.participant[0].itsMe ? room.participant[1].location : room.participant[0].location}
           </BaseText>
         </Body>
         <Right />
+        <Right>
+          <Button transparent onPress={() => showDialog()}>
+            <EntypoIcon name="log-out" size={24} />
+          </Button>
+        </Right>
       </Header>
       <Container>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
             style={{backgroundColor: '#81ecec'}}
-            contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            contentContainerStyle={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}>
             {room.messages.map((message) => (
               <MessageWrapper key={message.id}>
                 {message.from.itsMe ? (
@@ -207,15 +224,9 @@ export default ({navigation, route}) => {
             )}
           </ScrollView>
         </TouchableWithoutFeedback>
-        <MessageTyper
-          user={user}
-          roomId={room.id}
-          participant={room.participant}
-        />
+        <MessageTyper user={user} roomId={room.id} participant={room.participant} />
       </Container>
-      <Overlay
-        isVisible={overlayVisible}
-        onBackdropPress={() => setOverlayVisible(false)}>
+      <Overlay isVisible={overlayVisible} onBackdropPress={() => setOverlayVisible(false)}>
         <PopupContainer>
           <Text>신고하기</Text>
           <DropDownPicker
@@ -234,14 +245,15 @@ export default ({navigation, route}) => {
             containerStyle={{height: 40}}
             style={{backgroundColor: '#fafafa'}}
             defaultValue={repoCategory}
-            itemStyle={{
-              justifyContent: 'flex-start',
-            }}
+            itemStyle={{justifyContent: 'flex-start'}}
             dropDownStyle={{backgroundColor: '#fafafa'}}
             onChangeItem={(item) => setRepoCategory(item.value)}
           />
           <TextInput
-            style={{height: 50, textAlignVertical: 'top'}}
+            style={{
+              height: 50,
+              textAlignVertical: 'top',
+            }}
             multiline={true}
             numberOfLines={5}
             {...repoReasonText}
@@ -250,6 +262,11 @@ export default ({navigation, route}) => {
           <Button title="submit" onPress={onComplain} />
         </PopupContainer>
       </Overlay>
+      <Dialog.Container visible={dialogVisible}>
+        <Dialog.Description>チャットから退出しますか</Dialog.Description>
+        <Dialog.Button label="退出" onPress={handleExit} />
+        <Dialog.Button color="red" label="キャンセール" onPress={handleCancel} />
+      </Dialog.Container>
     </Root>
   );
 };

@@ -10,9 +10,7 @@ import {ActionSheet} from 'native-base';
 import Icon from 'react-native-ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import constants from '../../constants';
-import ImagePicker from 'react-native-image-crop-picker';
 import {APOLLO_URI} from '../../apolloClient';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 const View = styled.View`
   display: flex;
@@ -45,94 +43,10 @@ export default ({user, roomId, participant}) => {
       text.onChangeText('');
     }
   };
-  const takePictureFromCamera = () => {
-    ImagePicker.openCamera({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then((image) => {
-      console.log(image);
-    });
-  };
-  const selectImageFromGallery = () => {
-    ImagePicker.openPicker({
-      multiple: false,
-    }).then((image) => {
-      console.log(image);
-      upload(image);
-    });
-  };
-  const upload = async (image) => {
-    request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((result) =>
-      console.log(result),
-    );
-    console.log('upload');
-    console.log(image);
-    const formData = new FormData();
-    console.log('boundary:', formData._boundary);
-    formData.append('file', {
-      name: 'ddddd',
-      type: 'image/jpeg',
-      uri: 'file:///storage/emulated/0/Download/images.jpeg',
-    });
-    console.log(formData);
-    try {
-      await fetch(`${APOLLO_URI}/api/upload`, {
-        method: 'post',
-        headers: {'content-type': 'multipart/form-data'},
-        body: formData,
-      });
-      // await axios.post(`${APOLLO_URI}/api/upload`, formData, {
-      //   headers: {'content-type': 'multipart/form-data'},
-      // });
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
-  const onPhotoPress = () => {
-    ActionSheet.show(
-      {
-        options: [
-          'take a photo',
-          'select photo from gallery',
-          'watch a AD',
-          'cancel',
-        ],
-        cancelButtonIndex: 3,
-        title: `남아있는 비행기 수 : ${user.goldPlane}`,
-      },
-      (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            if (user.goldPlane < 1) {
-              Alert.alert('not enough plane');
-            }
-            takePictureFromCamera();
-            break;
-          case 1:
-            if (user.goldPlane < 1) {
-              Alert.alert('not enough plane');
-            }
-            selectImageFromGallery();
-            break;
-          case 2:
-            break;
-        }
-      },
-    );
-  };
   return (
     <View>
-      <TouchableOpacity onPress={onPhotoPress}>
-        <FontAwesomeIcon name="file-photo-o" size={30} color="#55efc4" />
-      </TouchableOpacity>
-      <TextInput
-        type="text"
-        {...text}
-        style={{width: 330, marginHorizontal: 10}}
-        placeholder="input your message"
-      />
+      <TextInput type="text" {...text} style={{width: 330, marginHorizontal: 10}} placeholder="input your message" />
 
       <TouchableOpacity onPress={onSubmit}>
         <Icon name="paper-plane" size={30} color="#55efc4" />
