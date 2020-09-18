@@ -52,12 +52,14 @@ export const SENDMESSAGE = gql`
 
 export const COMPLAIN = gql`
   mutation complain(
+    $blockFlgId: String!
     $messageId: String!
     $toId: String!
     $category: String!
     $comment: String!
   ) {
     complain(
+      blockFlgId: $blockFlgId
       messageId: $messageId
       toId: $toId
       category: $category

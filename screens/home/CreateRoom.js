@@ -36,7 +36,7 @@ const Content = styled.View`
   width: 100%;
 `;
 
-export default ({navigation}) => {
+export default ({navigation, route}) => {
   const planeType = route.params?.planeType;
   const [location, setLocation] = useState();
   const [loading, setLoading] = useState(false);
