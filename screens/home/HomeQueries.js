@@ -33,6 +33,44 @@ export const CREATEROOM = gql`
         gender
         location
         machineId
+        itsMe
+      }
+      messages {
+        id
+        data
+        type
+        to {
+          id
+          nickname
+          itsMe
+        }
+        from {
+          id
+          nickname
+          itsMe
+        }
+        isChecked
+        updatedAt
+        createdAt
+        updatedAt
+      }
+      isAlive
+      blockFlg {
+        id
+        fromId
+        toId
+        flag
+      }
+      readFlg {
+        id
+        room {
+          id
+        }
+        fromId
+        toId
+        checkedTime
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

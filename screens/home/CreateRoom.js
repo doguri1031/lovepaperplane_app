@@ -10,6 +10,7 @@ import {CREATEROOM} from './HomeQueries';
 import useInput from '../../hooks/useInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {CheckBox} from 'react-native-elements';
+import {useRoomsInfo, useSetRoomsInfo} from '../../AuthContext';
 
 const Container = styled.View`
   display: flex;
@@ -35,6 +36,8 @@ export default ({navigation, route}) => {
   const text = useInput('');
   const [createRoomMutation] = useMutation(CREATEROOM);
   const textRef = useRef();
+  const roomsInfo = useRoomsInfo();
+  const setRoomsInfo = useSetRoomsInfo();
 
   const validate = () => {
     if (location === '' || location === undefined) {
@@ -54,9 +57,13 @@ export default ({navigation, route}) => {
     const {loading, data} = await createRoomMutation({
       variables: {planeType: planeType, data: text.value, location: location},
     });
-    setTimeout(() => setLoading(false), 5000);
     if (data) {
-      navigation.navigate('roomList');
+      const room = data.createRoom;
+      let tempRoomsInfo = [...roomsInfo];
+      tempRoomsInfo.push(room);
+      setRoomsInfo(tempRoomsInfo);
+      setLoading(false);
+      navigation.navigate('Home');
     } else {
       Alert.alert('failed to send message');
     }

@@ -72,6 +72,8 @@ export const LOGIN = gql`
           }
           isChecked
           updatedAt
+          createdAt
+          updatedAt
         }
         isAlive
         blockFlg {
@@ -80,6 +82,17 @@ export const LOGIN = gql`
           toId
           flag
         }
+        readFlg {
+          id
+          room {
+            id
+          }
+          fromId
+          toId
+          checkedTime
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -87,22 +100,8 @@ export const LOGIN = gql`
   }
 `;
 export const CREATE_USER = gql`
-  mutation createUser(
-    $username: String!
-    $birthDate: String!
-    $gender: String!
-    $location: String!
-    $nickname: String!
-    $machineId: String!
-  ) {
-    createUser(
-      username: $username
-      birthDate: $birthDate
-      gender: $gender
-      location: $location
-      nickname: $nickname
-      machineId: $machineId
-    ) {
+  mutation createUser($username: String!, $birthDate: String!, $gender: String!, $location: String!, $nickname: String!, $machineId: String!) {
+    createUser(username: $username, birthDate: $birthDate, gender: $gender, location: $location, nickname: $nickname, machineId: $machineId) {
       id
       username
       birthDate

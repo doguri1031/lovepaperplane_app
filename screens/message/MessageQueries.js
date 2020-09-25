@@ -63,7 +63,17 @@ export const COMPLAIN = gql`
 `;
 
 export const READMESSAGE = gql`
-  mutation readMessage($unreadMessageIdList: [String]!) {
-    readMessage(unreadMessageIdList: $unreadMessageIdList)
+  mutation readMessage($readeFlgId: String!) {
+    readMessage(readeFlgId: $readeFlgId) {
+      id
+      room {
+        id
+      }
+      fromId
+      toId
+      checkedTime
+      createdAt
+      updatedAt
+    }
   }
 `;
