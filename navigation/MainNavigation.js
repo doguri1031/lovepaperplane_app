@@ -17,7 +17,7 @@ export default () => {
   const setMessages = useSetMessages();
   const setLoading = useSetLoading();
   const roomsInfo = useRoomsInfo();
-  const tempRoomsInfo = {...roomsInfo};
+  const tempRoomsInfo = [...roomsInfo];
   const setRoomsInfo = useSetRoomsInfo();
   /*const {loading: getUserLoading, data: getUserData, refetch} = useQuery(
     GETUSER,
@@ -38,7 +38,7 @@ export default () => {
     console.log('subsub');
     if (newMessageData) {
       setMessages(newMessageData.newMessage.data);
-
+      console.log('newMessage');
       console.log(tempRoomsInfo);
 
       const index = tempRoomsInfo.findIndex((room) => {
@@ -47,11 +47,15 @@ export default () => {
           return true;
         }
       });
-      tempRoomsInfo[index].messages.push({...newMessageData.newMessage});
-      console.log('number2:' + tempRoomsInfo[index].messages.length);
-      console.log('after add');
-      console.log(tempRoomsInfo);
-      setUserInfo({...tempRoomsInfo});
+      if (index >= 0) {
+        if (tempRoomsInfo[index].messages[tempRoomsInfo[index].messages.length - 1].id !== newMessageData.newMessage.id) {
+          tempRoomsInfo[index].messages.push({...newMessageData.newMessage});
+          console.log('number2:' + tempRoomsInfo[index].messages.length);
+          console.log('after add');
+          console.log(tempRoomsInfo);
+          setUserInfo({...tempRoomsInfo});
+        }
+      }
     }
   }, [newMessageData]);
 

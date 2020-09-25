@@ -153,20 +153,18 @@ export default ({navigation, route}) => {
     }
   };
   const readingMessage = async () => {
-    let unreadMessageIdList = [];
+    let lastMessage;
     //제일 마지막 메세지부터, 기독 or 내 메세지인지 확인하고 맞으면 for문 break;
     for (var i = room.messages.length - 1; i >= 0; i--) {
-      if (room.messages[i].itsMe || room.messages[i].isChecked) {
+      if (!room.messages[i].itsMe) {
+        lastMessage = room.messages[i];
         break;
       }
-      unreadMessageIdList.push(room.messages[i].id);
     }
-    if (unreadMessageIdList.length > 0) {
-      console.log('ddd222');
-      console.log(unreadMessageIdList);
-      const {
-        data: {readMessage},
-      } = await readMessageMutation({variables: {unreadMessageIdList: unreadMessageIdList}});
+    const date = new Date();
+    if (lastMessage.createAt > room.readFlg.checkedTime) {
+      const {data: readMessage} = await readMessageMutation({variables: {readeFlgId: room.readFlg.id}});
+      Alert.alert('get readMessage');
     }
   };
 
@@ -223,9 +221,11 @@ export default ({navigation, route}) => {
                   </SendMessageWapper>
                 ) : (
                   <ReceiveMesssageWrapper>
-                    <ReadFlg>
-                      <Text>{'기독'}</Text>
-                    </ReadFlg>
+                    {message.createdAt < room.readFlg.checkedTime && (
+                      <ReadFlg>
+                        <Text>{'기독'}</Text>
+                      </ReadFlg>
+                    )}
                     <TouchableOpacity
                       onLongPress={() => {
                         setSeletedMessage(message);

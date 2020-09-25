@@ -72,6 +72,8 @@ export const LOGIN = gql`
           }
           isChecked
           updatedAt
+          createdAt
+          updatedAt
         }
         isAlive
         blockFlg {
@@ -79,6 +81,17 @@ export const LOGIN = gql`
           fromId
           toId
           flag
+        }
+        readFlg {
+          id
+          room {
+            id
+          }
+          fromId
+          toId
+          checkedTime
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
