@@ -1,12 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {useQuery, useMutation} from 'react-apollo-hooks';
 import {CHECK_USERNAME, CREATE_USER} from './AuthQueries';
-import {
-  Text,
-  TouchableWithoutFeedback,
-  Keyboard,
-  AsyncStorage,
-} from 'react-native';
+import {Text, TouchableWithoutFeedback, Keyboard, AsyncStorage} from 'react-native';
 import constants from '../../constants';
 import styled from 'styled-components';
 import {Button} from '../../components/Buttons';
@@ -29,7 +24,7 @@ const View = styled.View`
 const TouchableOpacity = styled.TouchableOpacity`
   width: 100%;
 `;
-export default () => {
+export default ({navigation}) => {
   const username = useInput('');
   const nickname = useInput('');
   const [gender, setGender] = useState('');
@@ -82,7 +77,7 @@ export default () => {
     if (validate()) {
       const {data: createUser} = await createUserMutation();
       console.log('machineId:' + createUser.createUser.machineId);
-      logUserIn(createUser.createUser.machineId);
+      logUserIn(createUser.createUser);
       console.log('ddd');
     }
   };
@@ -109,9 +104,7 @@ export default () => {
 
         <TouchableOpacity onPress={() => setGenderOverlay(true)}>
           <Input
-            errorMessage={
-              isSubmitClicked && gender === '' ? 'fill in gender' : ''
-            }
+            errorMessage={isSubmitClicked && gender === '' ? 'fill in gender' : ''}
             placeholder="INPUT GENDER"
             disabled={true}
             value={gender}
@@ -121,9 +114,7 @@ export default () => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setLocationOverlay(true)}>
           <Input
-            errorMessage={
-              isSubmitClicked && location === '' ? 'fill in location' : ''
-            }
+            errorMessage={isSubmitClicked && location === '' ? 'fill in location' : ''}
             placeholder="INPUT LOCATION"
             disabled={true}
             value={location}
@@ -131,28 +122,17 @@ export default () => {
             label="LOCATION"
           />
         </TouchableOpacity>
+        <Input {...usernameError} placeholder="INPUT USERNAME" {...username} leftIcon={<Icon name="user" size={24} color="black" />} label="USERNAME" />
         <Input
-          {...usernameError}
-          placeholder="INPUT USERNAME"
-          {...username}
-          leftIcon={<Icon name="user" size={24} color="black" />}
-          label="USERNAME"
-        />
-        <Input
-          errorMessage={
-            isSubmitClicked && nickname.value === '' ? 'fill in nickname' : ''
-          }
+          errorMessage={isSubmitClicked && nickname.value === '' ? 'fill in nickname' : ''}
           placeholder="INPUT NICKNAME"
           {...nickname}
           leftIcon={<Icon name="vcard-o" size={24} color="black" />}
           label="NICKNAME"
         />
-        <TouchableOpacity
-          onPress={() => datePickerRef.current.showDatePicker()}>
+        <TouchableOpacity onPress={() => datePickerRef.current.showDatePicker()}>
           <Input
-            errorMessage={
-              isSubmitClicked && birthDate === '' ? 'fill in birthdate' : ''
-            }
+            errorMessage={isSubmitClicked && birthDate === '' ? 'fill in birthdate' : ''}
             disabled={true}
             value={birthDate}
             placeholder="INPUT AGE"
@@ -171,11 +151,7 @@ export default () => {
           onBackdropPress={() => {
             setGenderOverlay(false);
           }}>
-          <GenderOverlay
-            gender={gender}
-            setGender={setGender}
-            setGenderOverlay={setGenderOverlay}
-          />
+          <GenderOverlay gender={gender} setGender={setGender} setGenderOverlay={setGenderOverlay} />
         </Overlay>
         <Overlay
           isVisible={locationOverlay}
@@ -186,11 +162,7 @@ export default () => {
           onBackdropPress={() => {
             setLocationOverlay(false);
           }}>
-          <LocationOverlay
-            location={location}
-            setLocation={setLocation}
-            setLocationOverlay={setLocationOverlay}
-          />
+          <LocationOverlay location={location} setLocation={setLocation} setLocationOverlay={setLocationOverlay} />
         </Overlay>
         <DatePicker
           ref={datePickerRef}
