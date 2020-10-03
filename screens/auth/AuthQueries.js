@@ -173,6 +173,17 @@ export const CREATE_USER = gql`
           updatedAt
         }
         isAlive
+        readFlg {
+          id
+          room {
+            id
+          }
+          fromId
+          toId
+          checkedTime
+          createdAt
+          updatedAt
+        }
         blockFlg {
           id
           fromId

@@ -98,7 +98,7 @@ export default ({navigation, route}) => {
       tempRoomsInfo.push(room);
       setRoomsInfo(tempRoomsInfo);
       setLoading(false);
-      navigation.navigate('Home');
+      navigation.navigate('MessageNavigation', {screen: 'RoomList'});
     } else {
       Alert.alert('failed to send message');
     }

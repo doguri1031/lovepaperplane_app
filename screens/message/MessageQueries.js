@@ -77,3 +77,19 @@ export const READMESSAGE = gql`
     }
   }
 `;
+
+export const MESSAGEREAD = gql`
+  subscription messageRead($userId: String!) {
+    messageRead(userId: $userId) {
+      id
+      room {
+        id
+      }
+      fromId
+      toId
+      checkedTime
+      createdAt
+      updatedAt
+    }
+  }
+`;

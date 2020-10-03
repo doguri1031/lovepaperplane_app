@@ -3,10 +3,11 @@ import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import TabNavigation from './TabNavigation';
-import {useSubscription} from 'react-apollo-hooks';
-import {NEWMESSAGE} from '../screens/message/MessageQueries';
+import {useMutation, useSubscription} from 'react-apollo-hooks';
+import {MESSAGEREAD, NEWMESSAGE} from '../screens/message/MessageQueries';
 import {useUserInfo, useSetMessages, useLoading, useSetLoading, useSetUserInfo, useRoomsInfo, useSetRoomsInfo} from '../AuthContext';
 import Room from '../screens/message/Room';
+import {SEEROOM} from '../screens/message/RoomsQueries';
 
 const MainNavigation = createStackNavigator();
 
@@ -14,11 +15,11 @@ export default () => {
   const userInfo = useUserInfo();
   const setUserInfo = useSetUserInfo();
   const tempUserInfo = {...userInfo};
-  const setMessages = useSetMessages();
   const setLoading = useSetLoading();
   const roomsInfo = useRoomsInfo();
-  const tempRoomsInfo = [...roomsInfo];
+  let tempRoomsInfo = [...roomsInfo];
   const setRoomsInfo = useSetRoomsInfo();
+  const [seeRoomMutation] = useMutation(SEEROOM);
   /*const {loading: getUserLoading, data: getUserData, refetch} = useQuery(
     GETUSER,
   );
@@ -28,19 +29,20 @@ export default () => {
   const {loading: newMessageLoding, data: newMessageData, error} = useSubscription(NEWMESSAGE, {
     variables: {userId: userInfo.id},
   });
+
+  const {loading: messageReadLoading, data: messageReadData} = useSubscription(MESSAGEREAD, {
+    variables: {userId: userInfo.id},
+  });
   //초기 유저 데이터 userEffect
   /*useEffect(() => {
     console.log('userdata');
   }, [getUserData]);
   */
-  //메세지 데이터 useEffect
+
+  //새로운 메세지 데이터 useEffect
   useEffect(() => {
     console.log('subsub');
     if (newMessageData) {
-      setMessages(newMessageData.newMessage.data);
-      console.log('newMessage');
-      console.log(tempRoomsInfo);
-
       const index = tempRoomsInfo.findIndex((room) => {
         if (room.id === newMessageData.newMessage.room.id) {
           console.log('number:' + room.messages.length);
@@ -53,11 +55,51 @@ export default () => {
           console.log('number2:' + tempRoomsInfo[index].messages.length);
           console.log('after add');
           console.log(tempRoomsInfo);
-          setUserInfo({...tempRoomsInfo});
+          setRoomsInfo([...tempRoomsInfo]);
         }
+      } else {
+        console.log('aa');
+        const seeRoomFunc = async (roomId) => {
+          console.log('seeRoomMutation');
+          console.log(roomId);
+          const {data: seeRoom} = await seeRoomMutation({variables: {roomId}});
+          console.log(seeRoom);
+          console.log('damn man');
+          return seeRoom;
+        };
+        seeRoomFunc(newMessageData.newMessage.room.id).then((seeRoom) => {
+          console.log('seeRoom222');
+          console.log(seeRoom);
+          tempRoomsInfo.push(seeRoom.seeRoom);
+          console.log('tempRoomsInfo');
+          console.log([...tempRoomsInfo]);
+          setRoomsInfo([...tempRoomsInfo]);
+        });
       }
     }
   }, [newMessageData]);
+  //기독 데이터 useEffect
+  useEffect(() => {
+    console.log('기독!');
+    if (messageReadData) {
+      const index = tempRoomsInfo.findIndex((room) => {
+        if (room.id === messageReadData.messageRead.room.id) {
+          return true;
+        }
+      });
+      if (index >= 0) {
+        for (var i = 0; i < tempRoomsInfo[index].readFlg.length; i++) {
+          if (tempRoomsInfo[index].readFlg[i].id === messageReadData.messageRead.id) {
+            tempRoomsInfo[index].readFlg[i] = messageReadData.messageRead;
+            console.log('checkedTIme : ' + messageReadData.messageRead.checkedTime);
+
+            break;
+          }
+        }
+        setRoomsInfo([...tempRoomsInfo]);
+      }
+    }
+  }, [messageReadData]);
 
   return (
     //subscripttion연결

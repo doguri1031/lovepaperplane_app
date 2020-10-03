@@ -1,25 +1,54 @@
 import {gql} from 'apollo-boost';
 
-export const SEARCH_ROOMLIST = gql`
-  query seeRooms($userId: String!) {
-    seeRooms(userId: $userId) {
+export const SEEROOM = gql`
+  mutation seeRoom($roomId: String!) {
+    seeRoom(roomId: $roomId) {
       id
-      participantA {
+      participant {
         id
         username
         nickname
+        birthDate
+        gender
+        location
+        machineId
+        itsMe
       }
-      participantB {
-        id
-        username
-        nickname
-      }
-      lastCheckTimeA
-      lastCheckTimeB
       messages {
         id
+        data
+        type
+        to {
+          id
+          nickname
+          itsMe
+        }
+        from {
+          id
+          nickname
+          itsMe
+        }
+        isChecked
+        updatedAt
       }
       isAlive
+      readFlg {
+        id
+        room {
+          id
+        }
+        fromId
+        toId
+        checkedTime
+        createdAt
+        updatedAt
+      }
+      blockFlg {
+        id
+        fromId
+        toId
+        flag
+      }
       createdAt
       updatedAt
     }
