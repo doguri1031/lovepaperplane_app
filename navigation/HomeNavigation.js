@@ -9,6 +9,5 @@ const AuthNavigation = createStackNavigator();
 export default () => (
   <AuthNavigation.Navigator headerMode="none">
     <AuthNavigation.Screen name="Home" component={Home} />
-    <AuthNavigation.Screen name="CreateRoom" component={CreateRoom} />
   </AuthNavigation.Navigator>
 );
