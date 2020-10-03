@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import Home from '../screens/home/Home';
 import CreateRoom from '../screens/home/CreateRoom';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 const AuthNavigation = createStackNavigator();
 
 export default () => (

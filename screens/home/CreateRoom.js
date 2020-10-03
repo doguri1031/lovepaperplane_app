@@ -4,12 +4,12 @@ import {useMutation} from 'react-apollo-hooks';
 import styled from 'styled-components';
 import LocationSelector from '../../components/Overlay/LocationSelector';
 import LottiedLoader from '../../components/LottieLoader';
-import {Header, Left, Body, Right, Title, Radio, Container as NativeContainer} from 'native-base';
+import {Left, Body, Right, Title, Radio, Container as NativeContainer} from 'native-base';
 import {CREATEROOM} from './HomeQueries';
 import useInput from '../../hooks/useInput';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {useRoomsInfo, useSetRoomsInfo} from '../../AuthContext';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import Header from '../../components/Header';
+import {NavigationActions} from 'react-navigation';
 
 const Container = styled.View`
   display: flex;
@@ -68,6 +68,7 @@ export default ({navigation, route}) => {
   const planeType = route.params?.planeType;
   const [location, setLocation] = useState();
   const [loading, setLoading] = useState(false);
+  const [onFocus, setOnFocus] = useState(true);
   const text = useInput('');
   const [createRoomMutation] = useMutation(CREATEROOM);
   const textRef = useRef();
@@ -90,7 +91,11 @@ export default ({navigation, route}) => {
     }
     setLoading(true);
     const {loading, data} = await createRoomMutation({
-      variables: {planeType: planeType, data: text.value, location: location},
+      variables: {
+        planeType: planeType,
+        data: text.value,
+        location: location,
+      },
     });
     if (data) {
       const room = data.createRoom;
@@ -98,6 +103,7 @@ export default ({navigation, route}) => {
       tempRoomsInfo.push(room);
       setRoomsInfo(tempRoomsInfo);
       setLoading(false);
+      setOnFocus(false);
       navigation.navigate('MessageNavigation', {screen: 'RoomList'});
     } else {
       Alert.alert('failed to send message');
@@ -110,23 +116,12 @@ export default ({navigation, route}) => {
         <LottiedLoader />
       ) : (
         <Container>
-          <Header transparent>
-            <Left>
-              <Icon name="step-backward" size={24} color="white" onPress={() => navigation.navigate('Home')} />
-            </Left>
-            <Body>
-              <Title>CREATE ROOM</Title>
-            </Body>
-            <Right>
-              <FontAwesomeIcon name="paper-plane" size={24} color="white" onPress={onSubmit} />
-            </Right>
-          </Header>
-
+          <Header title="Create Room" leftIcon="step-backward" size={20} rightIcon="paper-plane" color="white" onPress={() => navigation.navigate('Home')} onSubmit={onSubmit} />
           <Content>
             <SelectLocation>To</SelectLocation>
             <LocationSelector location={location} setLocation={setLocation} />
           </Content>
-          <TextArea multiline={true} numberOfLines={30} autoFocus={true} {...text} ref={textRef} />
+          <TextArea multiline={true} numberOfLines={30} autoFocus={onFocus} {...text} ref={textRef} />
           <Triangle></Triangle>
           <CountText>0/300</CountText>
         </Container>

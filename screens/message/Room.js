@@ -148,7 +148,7 @@ export default ({navigation, route}) => {
       },
     });
     if (exitRoom) {
-      console.log('success exit room');
+      consol.log('success exit room');
       navigation.navigate('RoomList');
     } else {
       console.log('err man');
@@ -156,7 +156,6 @@ export default ({navigation, route}) => {
   };
   const readingMessage = async () => {
     let lastMessage;
-    Alert.alert('readMessage');
     //제일 마지막 메세지부터, 기독 or 내 메세지인지 확인하고 맞으면 for문 break;
     for (var i = room.messages.length - 1; i >= 0; i--) {
       if (!room.messages[i].itsMe) {
@@ -169,7 +168,6 @@ export default ({navigation, route}) => {
     console.log('readFlg:' + myReadFlg.checkedTime);
     if (lastMessage.createdAt > myReadFlg.checkedTime) {
       const {data: readMessage} = await readMessageMutation({variables: {readFlgId: myReadFlg.id}});
-      Alert.alert('get readMessage');
     }
   };
 
@@ -178,6 +176,9 @@ export default ({navigation, route}) => {
     console.log('ddd');
     readingMessage();
   }, []);
+  useEffect(() => {
+    readingMessage();
+  }, [rooms]);
 
   return (
     <Root>
