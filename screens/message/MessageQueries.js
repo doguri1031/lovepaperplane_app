@@ -63,8 +63,8 @@ export const COMPLAIN = gql`
 `;
 
 export const READMESSAGE = gql`
-  mutation readMessage($readeFlgId: String!) {
-    readMessage(readeFlgId: $readeFlgId) {
+  mutation readMessage($readFlgId: String!) {
+    readMessage(readFlgId: $readFlgId) {
       id
       room {
         id

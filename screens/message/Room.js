@@ -134,6 +134,7 @@ export default ({navigation, route}) => {
   });
   const myBlockFlg = myBlockFlgList[0];
   console.log('yourBlockFlg :' + yourBlockFlg.flag);
+  const myReadFlg = room.readFlg[0].fromId === user.id ? room.readFlg[0] : room.readFlg[1];
   const yourReadFlg = room.readFlg[0].fromId === user.id ? room.readFlg[1] : room.readFlg[0];
   const handleExit = async () => {
     const {
@@ -155,6 +156,7 @@ export default ({navigation, route}) => {
   };
   const readingMessage = async () => {
     let lastMessage;
+    Alert.alert('readMessage');
     //제일 마지막 메세지부터, 기독 or 내 메세지인지 확인하고 맞으면 for문 break;
     for (var i = room.messages.length - 1; i >= 0; i--) {
       if (!room.messages[i].itsMe) {
@@ -163,8 +165,10 @@ export default ({navigation, route}) => {
       }
     }
     const date = new Date();
-    if (lastMessage.createAt > room.readFlg.checkedTime) {
-      const {data: readMessage} = await readMessageMutation({variables: {readeFlgId: room.readFlg.id}});
+    console.log('lastMessage:' + lastMessage.createdAt);
+    console.log('readFlg:' + myReadFlg.checkedTime);
+    if (lastMessage.createdAt > myReadFlg.checkedTime) {
+      const {data: readMessage} = await readMessageMutation({variables: {readFlgId: myReadFlg.id}});
       Alert.alert('get readMessage');
     }
   };
