@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Platform} from 'react-native';
+import {Badge} from '../components/Badge';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import NavIcon from '../components/NavIcon';
 import Home from '../screens/home/Home';
@@ -8,24 +9,48 @@ import HomeNavigation from './HomeNavigation';
 import RoomList from '../screens/message/RoomList';
 import MessageNavigation from './MessageNavigation';
 import SettingNavigation from './SettingNavigation';
+import {useRoomsInfo, useUserInfo} from '../AuthContext';
 
 const TabNavigation = createBottomTabNavigator();
 
 export default () => {
+  const roomsInfo = useRoomsInfo();
+  const userInfo = useUserInfo();
+  const [isNewMessage, setIsNewMessage] = useState(false);
+
+  useEffect(() => {
+    console.log('tabNav');
+    let myReadFlg;
+    let breakFlg = false;
+    for (var i = 0; i < roomsInfo.length; i++) {
+      console.log('tabNav2 :' + i);
+      myReadFlg = roomsInfo[i].readFlg[0].fromId === userInfo.id ? roomsInfo[i].readFlg[0] : roomsInfo[i].readFlg[1];
+      for (var k = roomsInfo[i].messages.length - 1; k >= 0; k--) {
+        console.log('tabNav3');
+        console.log(roomsInfo[i].messages[k].createdAt);
+        console.log(myReadFlg.checkedTime);
+        if (roomsInfo[i].messages[k].createdAt > myReadFlg.checkedTime) {
+          console.log('tabNav4');
+          setIsNewMessage(true);
+          breakFlg = true;
+          break;
+        }
+      }
+      if (breakFlg) {
+        break;
+      }
+    }
+    if (!breakFlg) {
+      setIsNewMessage(false);
+    }
+  }, [roomsInfo]);
   return (
-    <TabNavigation.Navigator
-      initialRouteName="Home"
-      tabBarOptions={{showLabel: false}}>
+    <TabNavigation.Navigator initialRouteName="Home" tabBarOptions={{showLabel: false}}>
       <TabNavigation.Screen
         name="HomeNavigation"
         children={() => <HomeNavigation />}
         options={{
-          tabBarIcon: ({focused}) => (
-            <NavIcon
-              focused={focused}
-              name={Platform.OS === 'ios' ? 'ios-home' : 'md-home'}
-            />
-          ),
+          tabBarIcon: ({focused}) => <NavIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-home' : 'md-home'} />,
         }}
       />
       <TabNavigation.Screen
@@ -33,10 +58,10 @@ export default () => {
         children={() => <MessageNavigation />}
         options={{
           tabBarIcon: ({focused}) => (
-            <NavIcon
-              focused={focused}
-              name={Platform.OS === 'ios' ? 'ios-chatboxes' : 'md-chatboxes'}
-            />
+            <>
+              <NavIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-chatboxes' : 'md-chatboxes'} />
+              {isNewMessage && <Badge text={'N'} color={'red'} size="small" top={5} left={75} />}
+            </>
           ),
         }}
       />
@@ -44,12 +69,7 @@ export default () => {
         name="setting"
         component={SettingNavigation}
         options={{
-          tabBarIcon: ({focused}) => (
-            <NavIcon
-              focused={focused}
-              name={Platform.OS === 'ios' ? 'ios-settings' : 'md-settings'}
-            />
-          ),
+          tabBarIcon: ({focused}) => <NavIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-settings' : 'md-settings'} />,
         }}
       />
     </TabNavigation.Navigator>

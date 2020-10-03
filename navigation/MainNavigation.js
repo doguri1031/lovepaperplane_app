@@ -8,6 +8,11 @@ import {MESSAGEREAD, NEWMESSAGE} from '../screens/message/MessageQueries';
 import {useUserInfo, useSetMessages, useLoading, useSetLoading, useSetUserInfo, useRoomsInfo, useSetRoomsInfo} from '../AuthContext';
 import Room from '../screens/message/Room';
 import {SEEROOM} from '../screens/message/RoomsQueries';
+import EditNickName from '../screens/setting/EditNickName';
+import EditBirthDay from '../screens/setting/EditBirthDay';
+import EditLocation from '../screens/setting/EditLocation';
+import Accusation from '../screens/setting/Accusation';
+import CreateRoom from '../screens/home/CreateRoom';
 
 const MainNavigation = createStackNavigator();
 
@@ -111,6 +116,11 @@ export default () => {
       <MainNavigation.Navigator headerMode="none">
         <MainNavigation.Screen name="Tab" children={() => <TabNavigation />} />
         <MainNavigation.Screen name="Room" component={Room} options={{headerShown: true, headerTitle: 'ddd'}} />
+        <MainNavigation.Screen name="EditNickName" component={EditNickName} />
+        <MainNavigation.Screen name="EditBirthDay" component={EditBirthDay} />
+        <MainNavigation.Screen name="EditLocation" component={EditLocation} />
+        <MainNavigation.Screen name="Accusation" component={Accusation} />
+        <MainNavigation.Screen name="CreateRoom" component={CreateRoom} />
       </MainNavigation.Navigator>
     </NavigationContainer>
   );
