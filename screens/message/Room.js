@@ -38,6 +38,7 @@ const MessageBox = styled.View`
 const SendMessageWapper = styled.View`
   display: flex;
   flex-direction: row-reverse;
+  align-items: center;
   height: auto;
   width: 100%;
 `;
@@ -67,7 +68,7 @@ const Message = styled.View`
 const ReadFlg = styled.View`
   color: ${(props) => props.theme.lightGreyColor};
   font-size: 12px;
-  padding-right: 5px;
+  padding-right: 10px;
 `;
 const PopupContainer = styled.View`
   display: flex;
@@ -133,7 +134,7 @@ export default ({navigation, route}) => {
   });
   const myBlockFlg = myBlockFlgList[0];
   console.log('yourBlockFlg :' + yourBlockFlg.flag);
-
+  const yourReadFlg = room.readFlg[0].fromId === user.id ? room.readFlg[1] : room.readFlg[0];
   const handleExit = async () => {
     const {
       data: {exitRoom},
@@ -218,14 +219,14 @@ export default ({navigation, route}) => {
                         {message.data}
                       </Text>
                     </Message>
-                  </SendMessageWapper>
-                ) : (
-                  <ReceiveMesssageWrapper>
-                    {message.createdAt < room.readFlg.checkedTime && (
+                    {message.createdAt < yourReadFlg.checkedTime && (
                       <ReadFlg>
                         <Text>{'기독'}</Text>
                       </ReadFlg>
                     )}
+                  </SendMessageWapper>
+                ) : (
+                  <ReceiveMesssageWrapper>
                     <TouchableOpacity
                       onLongPress={() => {
                         setSeletedMessage(message);
