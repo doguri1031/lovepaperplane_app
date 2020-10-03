@@ -26,11 +26,12 @@ export default ({navigation}) => {
   });
   const onLoginPress = async () => {
     await refetch();
-    if (!loading && data) {
+    if (!loading && data.login) {
       console.log('login');
       console.log('tokenId: ' + data.login);
       logUserIn(data.login);
     } else {
+      console.log('fail login man');
       Alert.alert("you don't have account");
     }
   };

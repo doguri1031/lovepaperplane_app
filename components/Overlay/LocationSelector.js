@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Icon, Picker, Form} from 'native-base';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 export const locationList = [
   {value: '北海道'},
@@ -55,17 +56,16 @@ export default ({location, setLocation}) => {
   return (
     <Picker
       mode="dropdown"
-      placeholder="Select your SIM"
-      iosIcon={<Icon name="arrow-down" />}
-      placeholder="Select your SIM"
-      textStyle={{color: '#5cb85c'}}
+      iosIcon={<EntypoIcon name="chevron-small-down" size={24} />}
+      placeholder="地域を選択してください"
+      textStyle={{color: '#aaaaaa'}}
       itemStyle={{
         backgroundColor: '#d3d3d3',
         marginLeft: 10,
         paddingLeft: 10,
       }}
       itemTextStyle={{color: '#788ad2'}}
-      style={{width: 150}}
+      style={{width: 200}}
       selectedValue={location}
       onValueChange={(e) => setLocation(e)}>
       {locationList.map((item) => (
