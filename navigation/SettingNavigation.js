@@ -15,10 +15,6 @@ export default () => {
     <Stack.Navigator initialRouteName={'SettingList'}>
       <Stack.Screen name="SettingList" component={SettingList} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
-      <Stack.Screen name="EditNickName" component={EditNickName} />
-      <Stack.Screen name="EditBirthDay" component={EditBirthDay} />
-      <Stack.Screen name="EditLocation" component={EditLocation} />
-      <Stack.Screen name="Accusation" component={Accusation} />
     </Stack.Navigator>
   );
 };
