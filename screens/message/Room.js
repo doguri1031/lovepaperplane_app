@@ -7,7 +7,7 @@ import {Header, Left, Body, Right, Button, Title, Root, Text as BaseText} from '
 import DropDownPicker from 'react-native-dropdown-picker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {Overlay} from 'react-native-elements';
-import {useRoomsInfo, useUserInfo} from '../../AuthContext';
+import {useRoomsInfo, useUserInfo, useSetRoomsInfo} from '../../AuthContext';
 import MessageTyper from './MessageTyper';
 import constants from '../../constants';
 import useInput from '../../hooks/useInput';
@@ -82,6 +82,8 @@ export default ({navigation, route}) => {
   const roomId = route.params?.roomId;
   const user = useUserInfo();
   const rooms = useRoomsInfo();
+  const setRooms = useSetRoomsInfo();
+  let tempRooms = [...rooms];
   const repoReasonText = useInput();
   const [repoCategory, setRepoCategory] = useState();
   const [overlayVisible, setOverlayVisible] = useState(false);
@@ -91,11 +93,13 @@ export default ({navigation, route}) => {
   const [exitRoomsMutation] = useMutation(EXIT_ROOM);
   const [readMessageMutation] = useMutation(READMESSAGE);
 
-  const selectedRoom = rooms.filter((room) => {
+  const selectedIndex = rooms.findIndex((room) => {
     if (room.id === roomId) {
+      console.log('roomid:' + room.id);
       return true;
     }
   });
+  const selectedRoom = rooms[selectedIndex];
   const onComplain = async () => {
     if (repoCategory === undefined) {
       Alert.alert('カテゴリをご入力ください。');
@@ -122,9 +126,11 @@ export default ({navigation, route}) => {
     setDialogVisible(false);
   };
 
-  const room = selectedRoom[0];
+  const room = selectedRoom;
 
   let yourBlockFlg;
+  console.log('room?');
+  console.log(rooms);
   const myBlockFlgList = room.blockFlg.filter((flg) => {
     if (flg.fromId === user.id) {
       return true;
@@ -134,8 +140,8 @@ export default ({navigation, route}) => {
   });
   const myBlockFlg = myBlockFlgList[0];
   console.log('yourBlockFlg :' + yourBlockFlg.flag);
-  const myReadFlg = room.readFlg[0].fromId === user.id ? room.readFlg[0] : room.readFlg[1];
-  const yourReadFlg = room.readFlg[0].fromId === user.id ? room.readFlg[1] : room.readFlg[0];
+  let myReadFlg = room.readFlg[0].fromId === user.id ? room.readFlg[0] : room.readFlg[1];
+  let yourReadFlg = room.readFlg[0].fromId === user.id ? room.readFlg[1] : room.readFlg[0];
   const handleExit = async () => {
     const {
       data: {exitRoom},
@@ -148,7 +154,7 @@ export default ({navigation, route}) => {
       },
     });
     if (exitRoom) {
-      console.log('success exit room');
+      consol.log('success exit room');
       navigation.navigate('RoomList');
     } else {
       console.log('err man');
@@ -156,7 +162,6 @@ export default ({navigation, route}) => {
   };
   const readingMessage = async () => {
     let lastMessage;
-    Alert.alert('readMessage');
     //제일 마지막 메세지부터, 기독 or 내 메세지인지 확인하고 맞으면 for문 break;
     for (var i = room.messages.length - 1; i >= 0; i--) {
       if (!room.messages[i].itsMe) {
@@ -166,10 +171,14 @@ export default ({navigation, route}) => {
     }
     const date = new Date();
     console.log('lastMessage:' + lastMessage.createdAt);
+    console.log(myReadFlg);
     console.log('readFlg:' + myReadFlg.checkedTime);
     if (lastMessage.createdAt > myReadFlg.checkedTime) {
       const {data: readMessage} = await readMessageMutation({variables: {readFlgId: myReadFlg.id}});
-      Alert.alert('get readMessage');
+      console.log('readmessage go');
+      console.log(readMessage);
+      tempRooms[selectedIndex].readFlg[0].id === myReadFlg.id ? (tempRooms[selectedIndex].readFlg[0] = readMessage.readMessage) : (tempRooms[selectedIndex].readFlg[1] = readMessage.readMessage);
+      setRooms([...tempRooms]);
     }
   };
 
@@ -178,6 +187,9 @@ export default ({navigation, route}) => {
     console.log('ddd');
     readingMessage();
   }, []);
+  useEffect(() => {
+    readingMessage();
+  }, [rooms]);
 
   return (
     <Root>
