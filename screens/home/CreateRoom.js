@@ -2,33 +2,68 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Keyboard, Alert, TextInput} from 'react-native';
 import {useMutation} from 'react-apollo-hooks';
 import styled from 'styled-components';
-import {Button} from '../../components/Buttons';
 import LocationSelector from '../../components/Overlay/LocationSelector';
 import LottiedLoader from '../../components/LottieLoader';
 import {Header, Left, Body, Right, Title, Radio, Container as NativeContainer} from 'native-base';
 import {CREATEROOM} from './HomeQueries';
 import useInput from '../../hooks/useInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {CheckBox} from 'react-native-elements';
 import {useRoomsInfo, useSetRoomsInfo} from '../../AuthContext';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 const Container = styled.View`
   display: flex;
   flex-direction: column;
+  height: 1500px;
+  background: #3b3a36;
 `;
-const Text = styled.Text`
-  margin-left: 10px;
+const SelectLocation = styled.Text`
   font-weight: 700;
 `;
 const Content = styled.View`
+  position: absolute;
+  top: 130px;
+  left: 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 5px;
   width: 100%;
+  z-index: 1;
 `;
 
+const CountText = styled.Text`
+  position: absolute;
+  top: 27%;
+  left: 74%;
+  z-index: 2;
+`;
+
+const TextArea = styled.TextInput`
+  position: relative;
+  display: flex;
+  border-radius: 2px;
+  padding: 45px 20px 20px 20px;
+  width: 85%;
+  height: 20%;
+  margin-top: 20px;
+  box-shadow: 8px 8px 10px;
+  background: #f9fcbd;
+  align-self: center;
+`;
+
+const Triangle = styled.View`
+  position: absolute;
+  top: 400px;
+  left: 352px;
+  width: 0px;
+  height: 0px;
+  border-bottom-width: 32px;
+  border-bottom-color: #141414;
+  border-left-width: 32px;
+  border-left-color: #faeb69;
+`;
 export default ({navigation, route}) => {
   const planeType = route.params?.planeType;
   const [location, setLocation] = useState();
@@ -68,13 +103,14 @@ export default ({navigation, route}) => {
       Alert.alert('failed to send message');
     }
   };
+
   return (
     <>
       {loading ? (
         <LottiedLoader />
       ) : (
         <Container>
-          <Header>
+          <Header transparent>
             <Left>
               <Icon name="step-backward" size={24} color="white" onPress={() => navigation.navigate('Home')} />
             </Left>
@@ -82,16 +118,17 @@ export default ({navigation, route}) => {
               <Title>CREATE ROOM</Title>
             </Body>
             <Right>
-              <Icon name="step-backward" size={24} color="white" onPress={onSubmit} />
+              <FontAwesomeIcon name="paper-plane" size={24} color="white" onPress={onSubmit} />
             </Right>
           </Header>
 
           <Content>
-            <Radio color={'#f0ad4e'} selectedColor={'#5cb85c'} selected={false} />
-            <Text>location</Text>
+            <SelectLocation>To</SelectLocation>
             <LocationSelector location={location} setLocation={setLocation} />
           </Content>
-          <TextInput style={{height: 150, textAlignVertical: 'top'}} multiline={true} numberOfLines={30} autoFocus={true} {...text} placeholder="Textarea" ref={textRef} />
+          <TextArea multiline={true} numberOfLines={30} autoFocus={true} {...text} ref={textRef} />
+          <Triangle></Triangle>
+          <CountText>0/300</CountText>
         </Container>
       )}
     </>

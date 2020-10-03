@@ -1,4 +1,4 @@
-//import { defaults,resolvers } from './LocalState';
+// import { defaults,resolvers } from './LocalState';
 import {ApolloClient} from 'apollo-client';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {HttpLink} from 'apollo-link-http';
@@ -10,10 +10,10 @@ import {setContext} from 'apollo-link-context';
 import {getMainDefinition} from 'apollo-utilities';
 import {persistCache} from 'apollo-cache-persist';
 import {AsyncStorage} from 'react-native';
-//import { AsyncStorage } from '@react-native-community/async-storage';
+// import { AsyncStorage } from '@react-native-community/async-storage';
 
-export const APOLLO_URI = 'http://e103c202414c.ngrok.io';
-export const APOLLO_URI_WS = 'ws://e103c202414c.ngrok.io';
+export const APOLLO_URI = 'http://321d6683e5a9.ngrok.io';
+export const APOLLO_URI_WS = 'ws://321d6683e5a9.ngrok.io';
 
 const authLink = setContext(async (_, {headers}) => {
   const token = await AsyncStorage.getItem('token');
@@ -28,31 +28,25 @@ const authLink = setContext(async (_, {headers}) => {
 
 export default async () => {
   // Create an http link:
-  const httpLink = new HttpLink({
-    uri: APOLLO_URI,
-  });
+  const httpLink = new HttpLink({uri: APOLLO_URI});
 
   // Create a WebSocket link:
   const wsLink = new WebSocketLink({
     uri: APOLLO_URI_WS,
     options: {
       reconnect: true,
-      connectionParams: async () => ({
-        userid: await AsyncStorage.getItem('token'),
-      }),
+      connectionParams: async () => ({userid: await AsyncStorage.getItem('token')}),
     },
   });
 
   const cache = new InMemoryCache();
-  await persistCache({
-    cache,
-    storage: AsyncStorage,
-  });
+  await persistCache({cache, storage: AsyncStorage});
 
   const client = new ApolloClient({
     link: ApolloLink.from([
       onError(({graphQLErrors, networkError}) => {
         if (graphQLErrors) graphQLErrors.forEach(({message, locations, path}) => console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`));
+
         if (networkError) console.log(`[Network error]: ${networkError}`);
       }),
       split(
@@ -65,11 +59,11 @@ export default async () => {
         authLink.concat(httpLink),
       ),
       withClientState({
-        //defaults,
+        // defaults,
         cache,
       }),
     ]),
-    //resolvers,
+    // resolvers,
     cache,
   });
   return client;
