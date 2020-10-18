@@ -12,6 +12,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import constants from '../../constants';
 import {APOLLO_URI} from '../../apolloClient';
 import ImagePicker from 'react-native-image-crop-picker';
+import { imageResizer } from '../../utils';
 
 const View = styled.View`
   display: flex;
@@ -53,12 +54,17 @@ export default ({user, roomId, participant}) => {
       console.log(image);
     });
   };
-  const selectImageFromGallery = () => {
+  const selectImageFromGallery = async() => {
     ImagePicker.openPicker({
       multiple: false,
-    }).then((image) => {
+    }).then(async(image) => {
       console.log(image);
-      upload(image);
+      resizedImage= await imageResizer(image);
+      resizedImage.mime = image.mime;
+      resizedImage.path = resizedImage.uri;
+      console.log('check');
+      console.log(resizedImage);
+      upload(resizedImage);
     });
   };
   const upload = async (image) => {
