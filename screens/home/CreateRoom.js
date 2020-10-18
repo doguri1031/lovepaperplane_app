@@ -3,7 +3,7 @@ import {Keyboard, Alert, TextInput} from 'react-native';
 import {useMutation} from 'react-apollo-hooks';
 import styled from 'styled-components';
 import LocationSelector from '../../components/Overlay/LocationSelector';
-import LottiedLoader from '../../components/LottieLoader';
+import LottieLoader from '../../components/LottieLoader';
 import {Left, Body, Right, Title, Radio, Container as NativeContainer} from 'native-base';
 import {CREATEROOM} from './HomeQueries';
 import useInput from '../../hooks/useInput';
@@ -15,6 +15,14 @@ const Container = styled.View`
   display: flex;
   flex-direction: column;
   height: 1500px;
+  background: #3b3a36;
+`;
+const LoadingContainer = styled.View`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
   background: #3b3a36;
 `;
 const SelectLocation = styled.Text`
@@ -111,9 +119,9 @@ export default ({navigation, route}) => {
   };
 
   return (
-    <>
+    <>    
       {loading ? (
-        <LottiedLoader />
+        <LottieLoader />
       ) : (
         <Container>
           <Header title="Create Room" leftIcon="step-backward" size={20} rightIcon="paper-plane" color="white" onPress={() => navigation.navigate('Home')} onSubmit={onSubmit} />

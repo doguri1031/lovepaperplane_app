@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import {Header, Left, Body, Right, Title, Radio, Container as NativeContainer} from 'native-base';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import constants from '../constants';
 
-export default ({title, leftIcon, rightIcon, size, color, onPress, onSubmit}) => {
+export default ({title, leftIcon, rightIcon, size, color, backGroundColor = '#3b3a36', onPress, onSubmit}) => {
   const styles = {
     titleStyle: {
       color: '#fff',
@@ -11,13 +12,12 @@ export default ({title, leftIcon, rightIcon, size, color, onPress, onSubmit}) =>
   };
 
   const CommonHeader = styled(Header)`
-    display: flex;
-    width: 100%;
+    width: ${constants.width};
     padding: 0px 20px;
-    background: #3b3a36;
+    background: ${(props) => props.backGroundColor};
   `;
   return (
-    <CommonHeader transparent>
+    <CommonHeader backGroundColor={backGroundColor} transparent>
       <Left>
         <FontAwesomeIcon name={leftIcon} size={size} color={color} onPress={onPress} />
       </Left>

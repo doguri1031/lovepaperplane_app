@@ -57,15 +57,13 @@ export default () => {
       if (index >= 0) {
         if (tempRoomsInfo[index].messages[tempRoomsInfo[index].messages.length - 1].id !== newMessageData.newMessage.id) {
           tempRoomsInfo[index].messages.push({...newMessageData.newMessage});
-          console.log('number2:' + tempRoomsInfo[index].messages.length);
-          console.log('after add');
+
           console.log(tempRoomsInfo);
           setRoomsInfo([...tempRoomsInfo]);
         }
       } else {
         console.log('aa');
         const seeRoomFunc = async (roomId) => {
-          console.log('seeRoomMutation');
           console.log(roomId);
           const {data: seeRoom} = await seeRoomMutation({variables: {roomId}});
           console.log(seeRoom);
@@ -76,7 +74,7 @@ export default () => {
           console.log('seeRoom222');
           console.log(seeRoom);
           tempRoomsInfo.push(seeRoom.seeRoom);
-          console.log('tempRoomsInfo');
+
           console.log([...tempRoomsInfo]);
           setRoomsInfo([...tempRoomsInfo]);
         });
