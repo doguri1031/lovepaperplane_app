@@ -10,6 +10,7 @@ import RoomList from '../screens/message/RoomList';
 import MessageNavigation from './MessageNavigation';
 import SettingNavigation from './SettingNavigation';
 import {useRoomsInfo, useUserInfo} from '../AuthContext';
+import Upload from '../screens/message/Upload';
 
 const TabNavigation = createBottomTabNavigator();
 
@@ -19,18 +20,12 @@ export default () => {
   const [isNewMessage, setIsNewMessage] = useState(false);
 
   useEffect(() => {
-    console.log('tabNav');
     let myReadFlg;
     let breakFlg = false;
     for (var i = 0; i < roomsInfo.length; i++) {
-      console.log('tabNav2 :' + i);
       myReadFlg = roomsInfo[i].readFlg[0].fromId === userInfo.id ? roomsInfo[i].readFlg[0] : roomsInfo[i].readFlg[1];
       for (var k = roomsInfo[i].messages.length - 1; k >= 0; k--) {
-        console.log('tabNav3');
-        console.log(roomsInfo[i].messages[k].createdAt);
-        console.log(myReadFlg.checkedTime);
         if (roomsInfo[i].messages[k].createdAt > myReadFlg.checkedTime) {
-          console.log('tabNav4');
           setIsNewMessage(true);
           breakFlg = true;
           break;

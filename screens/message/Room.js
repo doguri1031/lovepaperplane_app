@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import {Text, TouchableWithoutFeedback, Keyboard, ScrollView, TouchableOpacity, TextInput, Alert} from 'react-native';
+import {Text, TouchableWithoutFeedback, Keyboard, ScrollView, TouchableOpacity, TextInput, Alert, Image} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import {Header, Left, Body, Right, Button, Title, Root, Text as BaseText} from 'native-base';
@@ -15,6 +15,7 @@ import {useMutation} from 'react-apollo-hooks';
 import {COMPLAIN, READMESSAGE} from './MessageQueries';
 import {EXIT_ROOM} from './ExitRoomQueries';
 import Dialog from 'react-native-dialog';
+import FullSizePhoto from '../../components/FullSizePhoto';
 
 const Container = styled.View`
   display: flex;
@@ -77,6 +78,11 @@ const PopupContainer = styled.View`
   height: 300px;
   border-radius: 10px;
 `;
+const PhotoBox = styled(Image)`
+  width: 230px;
+  height: 135px;
+  border-radius: 20px;
+`;
 
 export default ({navigation, route}) => {
   const roomId = route.params?.roomId;
@@ -89,6 +95,7 @@ export default ({navigation, route}) => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [selectedMessage, setSeletedMessage] = useState();
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [photoUri, setPhotoUri] = useState(null);
   const [complainMutation] = useMutation(COMPLAIN);
   const [exitRoomsMutation] = useMutation(EXIT_ROOM);
   const [readMessageMutation] = useMutation(READMESSAGE);
@@ -193,133 +200,159 @@ export default ({navigation, route}) => {
 
   return (
     <Root>
-      <Header>
-        <Left>
-          <FontAwesomeIcon name="step-backward" size={24} color="white" onPress={() => navigation.navigate('RoomList')} />
-        </Left>
-        <Body>
-          <Title>{room.participant[0].itsMe ? room.participant[1].nickname : room.participant[0].nickname}</Title>
-          <BaseText
-            style={{
-              color: 'white',
-              fontSize: 12,
-            }}>
-            {room.participant[0].itsMe ? room.participant[1].location : room.participant[0].location}
-          </BaseText>
-        </Body>
-        <Right />
-        <Right>
-          <Button transparent onPress={() => showDialog()}>
-            <EntypoIcon name="log-out" size={24} />
-          </Button>
-        </Right>
-      </Header>
-      <Container>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView
-            style={{backgroundColor: '#81ecec'}}
-            contentContainerStyle={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-            }}>
-            {room.messages.map((message) => (
-              <MessageWrapper key={message.id}>
-                {message.from.itsMe ? (
-                  <SendMessageWapper>
+      {photoUri ? (
+        <FullSizePhoto uri={photoUri} setPhotoUri={setPhotoUri} />
+      ) : (
+        <>
+          <Header>
+            <Left>
+              <FontAwesomeIcon name="step-backward" size={24} color="white" onPress={() => navigation.navigate('RoomList')} />
+            </Left>
+            <Body>
+              <Title>{room.participant[0].itsMe ? room.participant[1].nickname : room.participant[0].nickname}</Title>
+              <BaseText
+                style={{
+                  color: 'white',
+                  fontSize: 12,
+                }}>
+                {room.participant[0].itsMe ? room.participant[1].location : room.participant[0].location}
+              </BaseText>
+            </Body>
+            <Right />
+            <Right>
+              <Button transparent onPress={() => showDialog()}>
+                <EntypoIcon name="log-out" size={24} />
+              </Button>
+            </Right>
+          </Header>
+          <Container>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <ScrollView
+                style={{backgroundColor: '#81ecec'}}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                }}>
+                {room.messages.map((message) => (
+                  <MessageWrapper key={message.id}>
+                    {message.from.itsMe ? (
+                      <SendMessageWapper>
+                        <TouchableOpacity
+                          onPress={() => {
+                            if (message.type === 'photo') {
+                              setPhotoUri(message.data);
+                            }
+                          }}>
+                          {message.type === 'photo' ? (
+                            <PhotoBox source={{uri: message.data}} />
+                          ) : (
+                            <Message>
+                              <Text
+                                style={{
+                                  maxWidth: constants.width / 2.5,
+                                  fontSize: 18,
+                                }}>
+                                {message.data}
+                              </Text>
+                            </Message>
+                          )}
+                          {message.createdAt < yourReadFlg.checkedTime && (
+                            <ReadFlg>
+                              <Text>{'기독'}</Text>
+                            </ReadFlg>
+                          )}
+                        </TouchableOpacity>
+                      </SendMessageWapper>
+                    ) : (
+                      <ReceiveMesssageWrapper>
+                        <TouchableOpacity
+                          onPress={() => {
+                            if (message.type === 'photo') {
+                              setPhotoUri(message.data);
+                            }
+                          }}
+                          onLongPress={() => {
+                            setSeletedMessage(message);
+                            setOverlayVisible(true);
+                          }}>
+                          {message.type === 'photo' ? (
+                            <PhotoBox source={{uri: message.data}} />
+                          ) : (
+                            <Message>
+                              <Text
+                                style={{
+                                  maxWidth: constants.width / 2.5,
+                                  fontSize: 18,
+                                }}>
+                                {message.data}
+                              </Text>
+                            </Message>
+                          )}
+                        </TouchableOpacity>
+                      </ReceiveMesssageWrapper>
+                    )}
+                  </MessageWrapper>
+                ))}
+                {yourBlockFlg.flag && (
+                  <ExitMesssageWrapper>
                     <Message>
                       <Text
                         style={{
                           maxWidth: constants.width / 2.5,
                           fontSize: 18,
                         }}>
-                        {message.data}
+                        {'상대방이 채팅방을 나갔습니다.'}
                       </Text>
                     </Message>
-                    {message.createdAt < yourReadFlg.checkedTime && (
-                      <ReadFlg>
-                        <Text>{'기독'}</Text>
-                      </ReadFlg>
-                    )}
-                  </SendMessageWapper>
-                ) : (
-                  <ReceiveMesssageWrapper>
-                    <TouchableOpacity
-                      onLongPress={() => {
-                        setSeletedMessage(message);
-                        setOverlayVisible(true);
-                      }}>
-                      <Message>
-                        <Text
-                          style={{
-                            maxWidth: constants.width / 2.5,
-                            fontSize: 18,
-                          }}>
-                          {message.data}
-                        </Text>
-                      </Message>
-                    </TouchableOpacity>
-                  </ReceiveMesssageWrapper>
+                  </ExitMesssageWrapper>
                 )}
-              </MessageWrapper>
-            ))}
-            {yourBlockFlg.flag && (
-              <ExitMesssageWrapper>
-                <Message>
-                  <Text
-                    style={{
-                      maxWidth: constants.width / 2.5,
-                      fontSize: 18,
-                    }}>
-                    {'상대방이 채팅방을 나갔습니다.'}
-                  </Text>
-                </Message>
-              </ExitMesssageWrapper>
-            )}
-          </ScrollView>
-        </TouchableWithoutFeedback>
-        <MessageTyper user={user} roomId={room.id} participant={room.participant} />
-      </Container>
-      <Overlay isVisible={overlayVisible} onBackdropPress={() => setOverlayVisible(false)}>
-        <PopupContainer>
-          <Text>신고하기</Text>
-          <DropDownPicker
-            items={[
-              {
-                label: 'UK',
-                value: 'uk',
-                icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
-              },
-              {
-                label: 'France',
-                value: 'france',
-                icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
-              },
-            ]}
-            containerStyle={{height: 40}}
-            style={{backgroundColor: '#fafafa'}}
-            defaultValue={repoCategory}
-            itemStyle={{justifyContent: 'flex-start'}}
-            dropDownStyle={{backgroundColor: '#fafafa'}}
-            onChangeItem={(item) => setRepoCategory(item.value)}
-          />
-          <TextInput
-            style={{
-              height: 50,
-              textAlignVertical: 'top',
-            }}
-            multiline={true}
-            numberOfLines={5}
-            {...repoReasonText}
-            placeholder="Textarea"
-          />
-          <Button title="submit" onPress={onComplain} />
-        </PopupContainer>
-      </Overlay>
-      <Dialog.Container visible={dialogVisible}>
-        <Dialog.Description>チャットから退出しますか</Dialog.Description>
-        <Dialog.Button label="退出" onPress={handleExit} />
-        <Dialog.Button color="red" label="キャンセール" onPress={handleCancel} />
-      </Dialog.Container>
+              </ScrollView>
+            </TouchableWithoutFeedback>
+            <MessageTyper user={user} roomId={room.id} participant={room.participant} />
+          </Container>
+          <Overlay isVisible={overlayVisible} onBackdropPress={() => setOverlayVisible(false)}>
+            <PopupContainer>
+              <Text>신고하기</Text>
+              <DropDownPicker
+                items={[
+                  {
+                    label: 'UK',
+                    value: 'uk',
+                    icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
+                  },
+                  {
+                    label: 'France',
+                    value: 'france',
+                    icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
+                  },
+                ]}
+                containerStyle={{height: 40}}
+                style={{backgroundColor: '#fafafa'}}
+                defaultValue={repoCategory}
+                itemStyle={{justifyContent: 'flex-start'}}
+                dropDownStyle={{backgroundColor: '#fafafa'}}
+                onChangeItem={(item) => setRepoCategory(item.value)}
+              />
+              <TextInput
+                style={{
+                  height: 50,
+                  textAlignVertical: 'top',
+                }}
+                multiline={true}
+                numberOfLines={5}
+                {...repoReasonText}
+                placeholder="Textarea"
+              />
+              <Button title="submit" onPress={onComplain} />
+            </PopupContainer>
+          </Overlay>
+          <Dialog.Container visible={dialogVisible}>
+            <Dialog.Description>チャットから退出しますか</Dialog.Description>
+            <Dialog.Button label="退出" onPress={handleExit} />
+            <Dialog.Button color="red" label="キャンセール" onPress={handleCancel} />
+          </Dialog.Container>
+        </>
+      )}
     </Root>
   );
 };
