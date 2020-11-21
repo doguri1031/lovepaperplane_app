@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Keyboard, Alert, TextInput} from 'react-native';
+import {Keyboard, Alert, TextInput,Modal} from 'react-native';
 import {useMutation} from 'react-apollo-hooks';
 import styled from 'styled-components';
 import LocationSelector from '../../components/Overlay/LocationSelector';
@@ -9,13 +9,16 @@ import {CREATEROOM} from './HomeQueries';
 import useInput from '../../hooks/useInput';
 import {useRoomsInfo, useSetRoomsInfo} from '../../AuthContext';
 import Header from '../../components/Header';
-import {NavigationActions} from 'react-navigation';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import LocationSelectModal from '../../components/LocationSelectModal';
 
 const Container = styled.View`
   display: flex;
   flex-direction: column;
   height: 1500px;
   background: #3b3a36;
+  opacity:${(props)=>props.modalVisible?0.6:1};
+ 
 `;
 const LoadingContainer = styled.View`
   display: flex;
@@ -27,7 +30,13 @@ const LoadingContainer = styled.View`
 `;
 const SelectLocation = styled.Text`
   font-weight: 700;
+  
 `;
+const Location = styled.Text`
+  font-weight: 500;
+  padding-left:10px;
+`;
+
 const Content = styled.View`
   position: absolute;
   top: 130px;
@@ -77,6 +86,7 @@ export default ({navigation, route}) => {
   const [location, setLocation] = useState();
   const [loading, setLoading] = useState(false);
   const [onFocus, setOnFocus] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const text = useInput('');
   const [createRoomMutation] = useMutation(CREATEROOM);
   const textRef = useRef();
@@ -117,22 +127,30 @@ export default ({navigation, route}) => {
       Alert.alert('failed to send message');
     }
   };
+  
+  
+ 
 
   return (
     <>    
       {loading ? (
         <LottieLoader />
       ) : (
-        <Container>
+        <>
+        <Container modalVisible={modalVisible}>
           <Header title="Create Room" leftIcon="step-backward" size={20} rightIcon="paper-plane" color="white" onPress={() => navigation.navigate('Home')} onSubmit={onSubmit} />
           <Content>
+            <TouchableOpacity onPress={()=>setModalVisible(true)} style={{display:"flex", flexDirection:'row'}}>
             <SelectLocation>To</SelectLocation>
-            <LocationSelector location={location} setLocation={setLocation} />
+            <Location>{location}</Location>
+            </TouchableOpacity>
           </Content>
           <TextArea multiline={true} numberOfLines={30} autoFocus={onFocus} {...text} ref={textRef} />
           <Triangle></Triangle>
           <CountText>0/300</CountText>
-        </Container>
+          </Container>
+          <LocationSelectModal modalVisible={modalVisible} setModalVisible={setModalVisible} location={location} setLocation={setLocation}/>
+          </>
       )}
     </>
   );

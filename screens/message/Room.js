@@ -16,7 +16,7 @@ import {COMPLAIN, READMESSAGE} from './MessageQueries';
 import {EXIT_ROOM} from './ExitRoomQueries';
 import Dialog from 'react-native-dialog';
 import FullSizePhoto from '../../components/FullSizePhoto';
-
+import PhotoBox from '../../components/PhotoBox';
 const Container = styled.View`
   display: flex;
   flex-direction: column;
@@ -39,7 +39,8 @@ const MessageBox = styled.View`
 const SendMessageWapper = styled.View`
   display: flex;
   flex-direction: row-reverse;
-  align-items: center;
+  justify-content:flex-start;
+  align-items:flex-end;
   height: auto;
   width: 100%;
 `;
@@ -78,11 +79,6 @@ const PopupContainer = styled.View`
   height: 300px;
   border-radius: 10px;
 `;
-const PhotoBox = styled(Image)`
-  width: 230px;
-  height: 135px;
-  border-radius: 20px;
-`;
 
 export default ({navigation, route}) => {
   const roomId = route.params?.roomId;
@@ -99,7 +95,7 @@ export default ({navigation, route}) => {
   const [complainMutation] = useMutation(COMPLAIN);
   const [exitRoomsMutation] = useMutation(EXIT_ROOM);
   const [readMessageMutation] = useMutation(READMESSAGE);
-
+  let scrollView;
   const selectedIndex = rooms.findIndex((room) => {
     if (room.id === roomId) {
       console.log('roomid:' + room.id);
@@ -197,6 +193,9 @@ export default ({navigation, route}) => {
   useEffect(() => {
     console.log('ddd');
     readingMessage();
+    if(scrollView!==undefined){
+    scrollView.scrollToEnd({animated:false});
+    }
   }, []);
   useEffect(() => {
     readingMessage();
@@ -236,7 +235,11 @@ export default ({navigation, route}) => {
                 contentContainerStyle={{
                   flexDirection: 'row',
                   flexWrap: 'wrap',
-                }}>
+                }}
+                ref={(view)=>{
+                  scrollView=view;
+                }}
+                >
                 {room.messages.map((message) => (
                   <MessageWrapper key={message.id}>
                     {message.from.itsMe ? (
@@ -248,7 +251,7 @@ export default ({navigation, route}) => {
                             }
                           }}>
                           {message.type === 'photo' ? (
-                            <PhotoBox source={{uri: message.data}} />
+                            <PhotoBox uri={message.data} />
                           ) : (
                             <Message>
                               <Text
@@ -260,12 +263,12 @@ export default ({navigation, route}) => {
                               </Text>
                             </Message>
                           )}
+                          </TouchableOpacity>
                           {message.createdAt < yourReadFlg.checkedTime && (
                             <ReadFlg>
                               <Text> {'기독'}</Text>
                             </ReadFlg>
                           )}
-                        </TouchableOpacity>
                       </SendMessageWapper>
                     ) : (
                       <ReceiveMesssageWrapper>
@@ -280,7 +283,7 @@ export default ({navigation, route}) => {
                             setOverlayVisible(true);
                           }}>
                           {message.type === 'photo' ? (
-                            <PhotoBox source={{uri: message.data}} />
+                            <PhotoBox uri={message.data} />
                           ) : (
                             <Message>
                               <Text
