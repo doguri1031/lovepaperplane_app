@@ -35,38 +35,36 @@ export const dateTransformer = (dateString) => {
   }
 };
 
-
 const imageMaxWidth = 300;
 const imageMaxHeight = 300;
 
 export const imageResizer = async (image) => {
-  
-  let imageHeight=image.width;
-  let imageWidth=image.height;
+  let imageHeight = image.width;
+  let imageWidth = image.height;
   console.log(image);
-  if(image.height>image.width&&image.height >imageMaxHeight){
-      imageHeight = 300;
-      imageWidth = 300* image.width / image.height;
-  }else if(image.width>image.height&&image.width >imageMaxWidth){
-      imageWidth = 300;
-      imageHeight = 300 * image.height / image.width;
+  if (image.height > image.width && image.height > imageMaxHeight) {
+    imageHeight = 300;
+    imageWidth = (300 * image.width) / image.height;
+  } else if (image.width > image.height && image.width > imageMaxWidth) {
+    imageWidth = 300;
+    imageHeight = (300 * image.height) / image.width;
   }
   console.log('before');
   let resizedImage;
-  await ImageResizer.createResizedImage(image.path, imageWidth, imageHeight, 'JPEG', 60, )
-  .then(response => {
-    // response.uri is the URI of the new image that can now be displayed, uploaded...
-    // response.path is the path of the new image
-    // response.name is the name of the new image with the extension
-    // response.size is the size of the new image
-    console.log('success');
-    resizedImage= response;
-  })
-  .catch(err => {
-    console.log('failure');
-    // Oops, something went wrong. Check that the filename is correct and
-    // inspect err to get more details.
-  });
+  await ImageResizer.createResizedImage(image.path, imageWidth, imageHeight, 'JPEG', 60)
+    .then((response) => {
+      // response.uri is the URI of the new image that can now be displayed, uploaded...
+      // response.path is the path of the new image
+      // response.name is the name of the new image with the extension
+      // response.size is the size of the new image
+      console.log('success');
+      resizedImage = response;
+    })
+    .catch((err) => {
+      console.log('failure');
+      // Oops, something went wrong. Check that the filename is correct and
+      // inspect err to get more details.
+    });
   console.log('inUtil');
   return resizedImage;
-}
+};

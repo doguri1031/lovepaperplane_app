@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {TouchableOpacity, View, Switch, Text, ScrollView, AsyncStorage} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {TouchableOpacity, View, Switch, Text, ScrollView, AsyncStorage, Linking, Platform, NativeModules} from 'react-native';
 import {ListItem, Header} from 'react-native-elements';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -7,6 +7,7 @@ import Dialog from 'react-native-dialog';
 import {useUserInfo, userLogUserOut} from '../../AuthContext';
 import {useMutation} from 'react-apollo-hooks';
 import {LEAVE_APP} from './LeaveAppQuery';
+import messaging from '@react-native-firebase/messaging';
 
 export default ({navigation}) => {
   const user = useUserInfo();
@@ -14,8 +15,27 @@ export default ({navigation}) => {
   const [switchValue, setSwitchValue] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [leaveAppMutation] = useMutation(LEAVE_APP);
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    if (enabled) {
+      setSwitchValue(true);
+      console.log('Authorization status:', authStatus);
+    } else {
+      setSwitchValue(false);
+    }
+  };
+
+  useEffect(() => {
+    requestUserPermission();
+  });
+
   toggleSwitch = () => {
-    setSwitchValue((previousState) => !previousState);
+    requestUserPermission();
+    if (!switchValue) {
+      Linking.openSettings();
+    }
   };
 
   const showDialog = () => {
@@ -51,7 +71,7 @@ export default ({navigation}) => {
           title={
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={{fontSize: 16, marginRight: 20}}>配信：</Text>
-              <ToggleSwitch isOn={switchValue} onToggle={(isOn) => setSwitchValue(isOn)} />
+              <ToggleSwitch isOn={switchValue} onToggle={() => toggleSwitch()} />
             </View>
           }
           leftIcon={<Icon5 name={'sms'} size={20} color="#228b22" />}
