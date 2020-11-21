@@ -169,7 +169,7 @@ export default ({navigation, route}) => {
   };
   const readingMessage = async () => {
     let lastMessage;
-    //제일 마지막 메세지부터, 기독 or 내 메세지인지 확인하고 맞으면 for문 break;
+    // 제일 마지막 메세지부터, 기독 or 내 메세지인지 확인하고 맞으면 for문 break;
     for (var i = room.messages.length - 1; i >= 0; i--) {
       if (!room.messages[i].itsMe) {
         lastMessage = room.messages[i];
@@ -181,7 +181,11 @@ export default ({navigation, route}) => {
     console.log(myReadFlg);
     console.log('readFlg:' + myReadFlg.checkedTime);
     if (lastMessage.createdAt > myReadFlg.checkedTime) {
-      const {data: readMessage} = await readMessageMutation({variables: {readFlgId: myReadFlg.id}});
+      const {data: readMessage} = await readMessageMutation({
+        variables: {
+          readFlgId: myReadFlg.id,
+        },
+      });
       console.log('readmessage go');
       console.log(readMessage);
       tempRooms[selectedIndex].readFlg[0].id === myReadFlg.id ? (tempRooms[selectedIndex].readFlg[0] = readMessage.readMessage) : (tempRooms[selectedIndex].readFlg[1] = readMessage.readMessage);
@@ -189,7 +193,7 @@ export default ({navigation, route}) => {
     }
   };
 
-  //메세지 기독 체크
+  // 메세지 기독 체크
   useEffect(() => {
     console.log('ddd');
     readingMessage();
@@ -209,7 +213,7 @@ export default ({navigation, route}) => {
               <FontAwesomeIcon name="step-backward" size={24} color="white" onPress={() => navigation.navigate('RoomList')} />
             </Left>
             <Body>
-              <Title>{room.participant[0].itsMe ? room.participant[1].nickname : room.participant[0].nickname}</Title>
+              <Title> {room.participant[0].itsMe ? room.participant[1].nickname : room.participant[0].nickname}</Title>
               <BaseText
                 style={{
                   color: 'white',
@@ -258,7 +262,7 @@ export default ({navigation, route}) => {
                           )}
                           {message.createdAt < yourReadFlg.checkedTime && (
                             <ReadFlg>
-                              <Text>{'기독'}</Text>
+                              <Text> {'기독'}</Text>
                             </ReadFlg>
                           )}
                         </TouchableOpacity>
