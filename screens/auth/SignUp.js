@@ -1,7 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {useQuery, useMutation} from 'react-apollo-hooks';
 import {CHECK_USERNAME, CREATE_USER} from './AuthQueries';
-import {Text, TouchableWithoutFeedback, Keyboard, AsyncStorage} from 'react-native';
+import {Text, TouchableWithoutFeedback, Keyboard, TextInput as NativeTextInput} from 'react-native';
 import constants from '../../constants';
 import styled from 'styled-components';
 import {Button} from '../../components/Buttons';
@@ -13,14 +13,34 @@ import GenderOverlay from '../../components/Overlay/GenderOverlay';
 import LocationOverlay from '../../components/Overlay/LocationOverlay';
 import {DatePicker} from 'native-base';
 import {useLogUserIn} from '../../AuthContext';
+import Ionicon from 'react-native-ionicons';
+import LocationSelectModal from '../../components/LocationSelectModal';
+import TextButton from '../../components/TextButton';
+
+const Container = styled.View`
+  display: flex;
+  flex-direction: row;
+  border-bottom-color: red;
+  border-bottom-width: 2px;
+  padding-bottom: 2px;
+  background-color: 'rgba(0,0,0,0)';
+  width: 70%;
+  align-items: center;
+`;
+const TextInput = styled(NativeTextInput)`
+  font-size: 20px;
+  color: white;
+`;
 
 const View = styled.View`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: #3b3a36;
   flex: 1;
 `;
+const Block = styled.View``;
 const TouchableOpacity = styled.TouchableOpacity`
   width: 100%;
 `;
@@ -34,6 +54,7 @@ export default ({navigation}) => {
   const [genderOverlay, setGenderOverlay] = useState(false);
   const [locationOverlay, setLocationOverlay] = useState(false);
   const [usernameError, setUsernameError] = useState('');
+  const [locationModalVisible, setLocationModalVisible] = useState(false);
   const logUserIn = useLogUserIn();
   const datePickerRef = useRef();
   const {data, loading, refetch} = useQuery(CHECK_USERNAME, {
@@ -101,45 +122,32 @@ export default ({navigation}) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
         <Text>SignUp</Text>
-
-        <TouchableOpacity onPress={() => setGenderOverlay(true)}>
-          <Input
-            errorMessage={isSubmitClicked && gender === '' ? 'fill in gender' : ''}
-            placeholder="INPUT GENDER"
-            disabled={true}
-            value={gender}
-            leftIcon={<Icon name="transgender" size={24} color="black" />}
-            label="GENDER"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setLocationOverlay(true)}>
-          <Input
-            errorMessage={isSubmitClicked && location === '' ? 'fill in location' : ''}
-            placeholder="INPUT LOCATION"
-            disabled={true}
-            value={location}
-            leftIcon={<Icon name="map-marker" size={24} color="black" />}
-            label="LOCATION"
-          />
-        </TouchableOpacity>
-        <Input {...usernameError} placeholder="INPUT USERNAME" {...username} leftIcon={<Icon name="user" size={24} color="black" />} label="USERNAME" />
-        <Input
-          errorMessage={isSubmitClicked && nickname.value === '' ? 'fill in nickname' : ''}
-          placeholder="INPUT NICKNAME"
-          {...nickname}
-          leftIcon={<Icon name="vcard-o" size={24} color="black" />}
-          label="NICKNAME"
-        />
-        <TouchableOpacity onPress={() => datePickerRef.current.showDatePicker()}>
-          <Input
-            errorMessage={isSubmitClicked && birthDate === '' ? 'fill in birthdate' : ''}
-            disabled={true}
-            value={birthDate}
-            placeholder="INPUT AGE"
-            leftIcon={<Icon name="calendar" size={24} color="black" />}
-            label="age"
-          />
-        </TouchableOpacity>
+        <Container>
+          <Ionicon name="person" size={20} color="#4F8EF7" style={{paddingRight: '7%'}} />
+          <TextInput placeholder={'USERNAME'} {...username} />
+        </Container>
+        <Container>
+          <Ionicon name="happy" size={20} color="#4F8EF7" style={{paddingRight: '7%'}} />
+          <TextInput placeholder={'NICKNAME'} {...nickname} />
+        </Container>
+        <Container>
+          <TouchableOpacity onPress={() => datePickerRef.current.showDatePicker()} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Ionicon name="calendar" size={20} color="#4F8EF7" style={{paddingRight: '7%'}} />
+            <TextInput value={birthDate} placeholder={'BIRTHDATE'} editable={false} selectTextOnFocus={false} />
+          </TouchableOpacity>
+        </Container>
+        <Container>
+          <TouchableOpacity onPress={() => setLocationModalVisible(true)} style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <Ionicon name="pin" size={20} color="#4F8EF7" style={{paddingRight: '7%'}} />
+            <TextInput value={location} placeholder={'LOCATION'} editable={false} selectTextOnFocus={false} />
+          </TouchableOpacity>
+        </Container>
+        <Container>
+          <Ionicon name="pin" size={20} color="#4F8EF7" style={{paddingRight: '8%'}} />
+          <TextButton size={25} color={'black'} clickedColor={'red'} gender={gender} setGender={setGender} text={'male'} value={'male'} />
+          <TextButton size={25} color={'black'} clickedColor={'red'} gender={gender} setGender={setGender} text={'female'} vlaue={'female'} />
+        </Container>
+        <Block style={{height: '8%'}} />
         <Button text={'signup'} onPress={() => onSubmit()} />
 
         <Overlay
@@ -180,6 +188,7 @@ export default ({navigation}) => {
           onDateChange={(e) => setBirthDate(e.toDateString())}
           disabled={false}
         />
+        <LocationSelectModal modalVisible={locationModalVisible} setModalVisible={setLocationModalVisible} location={location} setLocation={setLocation} />
       </View>
     </TouchableWithoutFeedback>
   );

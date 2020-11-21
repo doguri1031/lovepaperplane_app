@@ -32,7 +32,9 @@ export default ({navigation}) => {
                 <Left style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                   <NView>
                     <Text>{room.participant[0].id === userInfo.id ? room.participant[1].nickname : room.participant[0].nickname}</Text>
+                    {room.messages[room.messages.length - 1].type==='photo'?<Text note>사진이 도착하였습니다</Text>:
                     <Text note>{room.messages[room.messages.length - 1].data}</Text>
+                    }
                   </NView>
                   <NView style={{marginRight: 10}}>
                     <Text note style={{marginRight: 5}}>
