@@ -12,6 +12,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import constants from '../../constants';
 import {APOLLO_URI} from '../../apolloClient';
 import ImagePicker from 'react-native-image-crop-picker';
+import {imageResizer} from '../../utils';
 
 const View = styled.View`
   display: flex;
@@ -45,20 +46,20 @@ export default ({user, roomId, participant}) => {
     }
   };
   const takePictureFromCamera = () => {
-    ImagePicker.openCamera({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then((image) => {
+    ImagePicker.openCamera({width: 300, height: 400, cropping: true}).then((image) => {
       console.log(image);
     });
   };
-  const selectImageFromGallery = () => {
-    ImagePicker.openPicker({
-      multiple: false,
-    }).then((image) => {
+  const selectImageFromGallery = async () => {
+    ImagePicker.openPicker({multiple: false}).then(async (image) => {
+      console.log('man');
       console.log(image);
-      upload(image);
+      resizedImage = await imageResizer(image);
+      resizedImage.mime = image.mime;
+      resizedImage.path = resizedImage.uri;
+      console.log('check');
+      console.log(resizedImage);
+      upload(resizedImage);
     });
   };
   const upload = async (image) => {
@@ -68,6 +69,10 @@ export default ({user, roomId, participant}) => {
     formData.append('description', 'dd');
     console.log('in upload');
     console.log(image);
+
+    if (Platform.OS === 'ios') {
+      image.path = 'file://' + image.path;
+    }
     formData.append('file', {
       name: image.path.split('/').pop(),
       type: image.mime,
@@ -78,7 +83,9 @@ export default ({user, roomId, participant}) => {
     console.log(JSON.stringify(formData._parts[2][1]));
     axios
       .post(APOLLO_URI + '/api/upload', formData, {
-        headers: {'Content-type': 'multipart/form-data'},
+        headers: {
+          'Content-type': 'multipart/form-data',
+        },
       })
       .then(async (response) => {
         Alert.alert('Upload Post Successfully ' + '');
@@ -121,7 +128,9 @@ export default ({user, roomId, participant}) => {
             if (user.availablePlane < 1) {
               Alert.alert('not enough plane');
             }
+            console.log('1');
             selectImageFromGallery();
+            console.log('2');
             break;
           case 2:
             break;
@@ -134,7 +143,15 @@ export default ({user, roomId, participant}) => {
       <TouchableOpacity onPress={onPhotoPress}>
         <FontAwesomeIcon name="file-photo-o" size={30} color="#55efc4" />
       </TouchableOpacity>
-      <TextInput type="text" {...text} style={{width: 330, marginHorizontal: 10}} placeholder="input your message" />
+      <TextInput
+        type="text"
+        {...text}
+        style={{
+          width: 330,
+          marginHorizontal: 10,
+        }}
+        placeholder="input your message"
+      />
 
       <TouchableOpacity onPress={onSubmit}>
         <Icon name="paper-plane" size={30} color="#55efc4" />
