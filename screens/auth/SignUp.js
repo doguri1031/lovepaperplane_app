@@ -116,8 +116,10 @@ export default ({navigation}) => {
     if (validate()) {
       const {data: createUser} = await createUserMutation();
       console.log('result:' + createUser.createUser);
-      navigation.navigate('SecretCheck', {username: username});
-
+      if (createUser.createUser) {
+        navigation.navigate('SecretCheck', {username: username});
+      } else {
+      }
       //logUserIn(createUser.createUser);
       console.log('ddd');
     }
