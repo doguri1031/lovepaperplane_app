@@ -39,8 +39,8 @@ const MessageBox = styled.View`
 const SendMessageWapper = styled.View`
   display: flex;
   flex-direction: row-reverse;
-  justify-content:flex-start;
-  align-items:flex-end;
+  justify-content: flex-start;
+  align-items: flex-end;
   height: auto;
   width: 100%;
 `;
@@ -193,8 +193,8 @@ export default ({navigation, route}) => {
   useEffect(() => {
     console.log('ddd');
     readingMessage();
-    if(scrollView!==undefined){
-    scrollView.scrollToEnd({animated:false});
+    if (scrollView !== undefined) {
+      scrollView.scrollToEnd({animated: false});
     }
   }, []);
   useEffect(() => {
@@ -236,10 +236,9 @@ export default ({navigation, route}) => {
                   flexDirection: 'row',
                   flexWrap: 'wrap',
                 }}
-                ref={(view)=>{
-                  scrollView=view;
-                }}
-                >
+                ref={(view) => {
+                  scrollView = view;
+                }}>
                 {room.messages.map((message) => (
                   <MessageWrapper key={message.id}>
                     {message.from.itsMe ? (
@@ -263,12 +262,12 @@ export default ({navigation, route}) => {
                               </Text>
                             </Message>
                           )}
-                          </TouchableOpacity>
-                          {message.createdAt < yourReadFlg.checkedTime && (
-                            <ReadFlg>
-                              <Text> {'기독'}</Text>
-                            </ReadFlg>
-                          )}
+                        </TouchableOpacity>
+                        {message.createdAt < yourReadFlg.checkedTime && (
+                          <ReadFlg>
+                            <Text> {'기독'}</Text>
+                          </ReadFlg>
+                        )}
                       </SendMessageWapper>
                     ) : (
                       <ReceiveMesssageWrapper>
@@ -323,7 +322,7 @@ export default ({navigation, route}) => {
               <DropDownPicker
                 items={[
                   {
-                    label: 'UK',
+                    label: '金銭目的（パパ活、援助交際など）',
                     value: 'uk',
                     icon: () => <FeatherIcon name="flag" size={18} color="#900" />,
                   },

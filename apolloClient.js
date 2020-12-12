@@ -12,72 +12,59 @@ import {persistCache} from 'apollo-cache-persist';
 import {AsyncStorage} from 'react-native';
 // import { AsyncStorage } from '@react-native-community/async-storage';
 
-export const APOLLO_URI = 'http://2d40daaa929b.ngrok.io';
-export const APOLLO_URI_WS = 'ws://2d40daaa929b.ngrok.io';
-
+export const APOLLO_URI = 'http://f05ad27a909a.ngrok.io';
+export const APOLLO_URI_WS = 'ws://f05ad27a909a.ngrok.io';
 
 const authLink = setContext(async (_, {headers}) => {
-    const token = await AsyncStorage.getItem('token');
+  const token = await AsyncStorage.getItem('token');
 
-    return {
-        headers: {
-            ...headers,
-            userid: token || null
-        }
-    };
+  return {
+    headers: {
+      ...headers,
+      userid: token || null,
+    },
+  };
 });
 
-export default async () => { // Create an http link:
-    const httpLink = new HttpLink({uri: APOLLO_URI});
+export default async () => {
+  // Create an http link:
+  const httpLink = new HttpLink({uri: APOLLO_URI});
 
-    // Create a WebSocket link:
-    const wsLink = new WebSocketLink({
-        uri: APOLLO_URI_WS,
-        options: {
-            reconnect: true,
-            connectionParams: async () => (
-                {userid: await AsyncStorage.getItem('token')}
-            )
-        }
-    });
+  // Create a WebSocket link:
+  const wsLink = new WebSocketLink({
+    uri: APOLLO_URI_WS,
+    options: {
+      reconnect: true,
+      connectionParams: async () => ({userid: await AsyncStorage.getItem('token')}),
+    },
+  });
 
-    const cache = new InMemoryCache();
-    await persistCache({cache, storage: AsyncStorage});
+  const cache = new InMemoryCache();
+  await persistCache({cache, storage: AsyncStorage});
 
-    const client = new ApolloClient({
-        link: ApolloLink.from(
-            [
-                onError(
-                    ({graphQLErrors, networkError}) => {
-                        if (graphQLErrors) 
-                            graphQLErrors.forEach(({message, locations, path}) => console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`));
-                        
+  const client = new ApolloClient({
+    link: ApolloLink.from([
+      onError(({graphQLErrors, networkError}) => {
+        if (graphQLErrors) graphQLErrors.forEach(({message, locations, path}) => console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`));
 
-
-                        if (networkError) 
-                            console.log(`[Network error]: ${networkError}`);
-                        
-
-                    }
-                ),
-                split(
-                    // split based on operation type
-                        ({query}) => {
-                        const definition = getMainDefinition(query);
-                        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-                    },
-                    wsLink,
-                    authLink.concat(httpLink),
-                ),
-                withClientState(
-                    { // defaults,
-                        cache
-                    }
-                ),
-            ]
-        ),
-        // resolvers,
-        cache
-    });
-    return client;
+        if (networkError) console.log(`[Network error]: ${networkError}`);
+      }),
+      split(
+        // split based on operation type
+        ({query}) => {
+          const definition = getMainDefinition(query);
+          return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+        },
+        wsLink,
+        authLink.concat(httpLink),
+      ),
+      withClientState({
+        // defaults,
+        cache,
+      }),
+    ]),
+    // resolvers,
+    cache,
+  });
+  return client;
 };

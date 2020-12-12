@@ -42,7 +42,7 @@ export default ({navigation}) => {
       </LottieContainer>
       <Text>Main</Text>
       <Button text="login" onPress={onLoginPress} />
-      <Button text="sign up" onPress={() => navigation.navigate('SignUp')} />
+      <Button text="sign up" onPress={() => navigation.navigate('SecretCheck')} />
     </View>
   );
 };
