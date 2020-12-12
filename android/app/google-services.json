@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "237940911298",
+    "firebase_url": "https://lovepaperplane-d4b95.firebaseio.com",
+    "project_id": "lovepaperplane-d4b95",
+    "storage_bucket": "lovepaperplane-d4b95.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237940911298:android:77fe6604f8da2113e89f5b",
+        "android_client_info": {
+          "package_name": "pakulee.android.lovepaperplane"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237940911298-enf90vog668so49tcgkshldsjag6l1l0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYwHfaPw7o2u4a76lA6Mr1ikacAG4wfgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237940911298-enf90vog668so49tcgkshldsjag6l1l0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-9370323781016527~3244894330"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237940911298:android:ac2167da549d4158e89f5b",
+        "android_client_info": {
+          "package_name": "com.lovepaperplane"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237940911298-enf90vog668so49tcgkshldsjag6l1l0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYwHfaPw7o2u4a76lA6Mr1ikacAG4wfgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237940911298-enf90vog668so49tcgkshldsjag6l1l0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
