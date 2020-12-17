@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import TabNavigation from './TabNavigation';
-import {useMutation, useSubscription} from 'react-apollo-hooks';
+import {useMutation, useQuery, useSubscription} from 'react-apollo-hooks';
 import {MESSAGEREAD, NEWMESSAGE} from '../screens/message/MessageQueries';
 import {useUserInfo, useSetMessages, useLoading, useSetLoading, useSetUserInfo, useRoomsInfo, useSetRoomsInfo} from '../AuthContext';
 import Room from '../screens/message/Room';
@@ -13,10 +13,13 @@ import EditBirthDay from '../screens/setting/EditBirthDay';
 import EditLocation from '../screens/setting/EditLocation';
 import Accusation from '../screens/setting/Accusation';
 import CreateRoom from '../screens/home/CreateRoom';
+import {LOGIN} from '../screens/auth/AuthQueries';
 
 const MainNavigation = createStackNavigator();
 
 export default () => {
+  console.log('this is userInfo');
+  const {loading, data: loginData, refetch} = useQuery(LOGIN);
   const userInfo = useUserInfo();
   const setUserInfo = useSetUserInfo();
   const tempUserInfo = {...userInfo};
@@ -29,7 +32,6 @@ export default () => {
     GETUSER,
   );
   */
-  console.log('this is userInfo');
   console.log(userInfo.id);
   const {loading: newMessageLoding, data: newMessageData, error} = useSubscription(NEWMESSAGE, {
     variables: {userId: userInfo.id},
@@ -43,7 +45,14 @@ export default () => {
     console.log('userdata');
   }, [getUserData]);
   */
-
+  useEffect(() => {
+    if (loginData) {
+      console.log('userdata : ' + loginData.login.user);
+      setUserInfo(loginData.login.user);
+      setRoomsInfo(loginData.login.rooms);
+      setLoading(false);
+    }
+  }, [loginData]);
   //새로운 메세지 데이터 useEffect
   useEffect(() => {
     console.log('subsub');

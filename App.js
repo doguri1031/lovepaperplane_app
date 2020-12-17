@@ -16,7 +16,7 @@ export default function Pre() {
   const preLoad = async () => {
     try {
       const apClient = await apolloClient();
-      //await AsyncStorage.setItem("isLoggedIn","true");
+      await AsyncStorage.setItem('isLoggedIn', 'true');
       await AsyncStorage.removeItem('isLoggedIn');
       await AsyncStorage.removeItem('token');
       console.log('tokencheck');

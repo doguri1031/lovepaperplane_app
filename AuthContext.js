@@ -9,13 +9,13 @@ export const AuthProvider = ({isLoggedIn: isLoggedInProp, children}) => {
   const [roomsInfo, setRoomsInfo] = useState([]);
   const [messages, setMessages] = useState('');
   const [loading, setLoading] = useState(true);
-  const logUserIn = async (login) => {
+  const logUserIn = async (token) => {
     try {
-      console.log('auth conetext: ' + login.user.id);
-      await AsyncStorage.setItem('token', login.user.id);
+      console.log('auth conetext: ' + token);
+      await AsyncStorage.setItem('token', token);
       await AsyncStorage.setItem('isLoggedIn', 'true');
-      setUserInfo(login.user);
-      setRoomsInfo(login.rooms);
+      //setUserInfo(login.user);
+      //setRoomsInfo(login.rooms);
       setIsLoggedIn(true);
     } catch (e) {
       console.log(e);

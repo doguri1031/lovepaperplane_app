@@ -4,7 +4,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import Main from '../screens/auth/Main';
 import SignUp from '../screens/auth/SignUp';
-import SecretCheck from '../screens/auth/SecretCheck';
+import SecretConfirm from '../screens/auth/SecretConfirm';
+import RequestSecret from '../screens/auth/RequestSecret';
 const AuthNavigation = createStackNavigator();
 
 export default () => (
@@ -12,7 +13,8 @@ export default () => (
     <AuthNavigation.Navigator headerMode="none">
       <AuthNavigation.Screen name="Main" component={Main} />
       <AuthNavigation.Screen name="SignUp" component={SignUp} />
-      <AuthNavigation.Screen name="SecretCheck" component={SecretCheck} />
+      <AuthNavigation.Screen name="SecretConfirm" component={SecretConfirm} />
+      <AuthNavigation.Screen name="RequestSecret" component={RequestSecret} />
     </AuthNavigation.Navigator>
   </NavigationContainer>
 );

@@ -1,8 +1,20 @@
 import {gql} from 'apollo-boost';
 
+export const SECRETCONFIRM = gql`
+  mutation secretConfirm($username: String!, $secret: String!) {
+    secretConfirm(username: $username, secret: $secret)
+  }
+`;
+
+export const REQUESTSECRET = gql`
+  mutation requestSecret($username: String!) {
+    requestSecret(username: $username)
+  }
+`;
+
 export const LOGIN = gql`
-  query login($machineId: String!) {
-    login(machineId: $machineId) {
+  query login {
+    login {
       user {
         id
         username

@@ -187,11 +187,19 @@ export default ({navigation}) => {
           <TextButton size={25} color={placeholderTextColor} clickedColor={iconColor} gender={gender} setGender={setGender} text={'female'} vlaue={'female'} />
           {gender === '' ? <Icon5 name={'check'} size={15} color={backgroundColor} style={{marginLeft: -20}} /> : <Icon5 name={'check'} size={15} color="#9de500" style={{marginLeft: -20}} />}
         </Container>
-        <Block style={{height: '9%'}} />
+        <Block style={{height: '7%'}} />
         <TouchableOpacity
           style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '70%', height: '6%', backgroundColor: 'rgba(126, 214, 223,1.0)'}}
           onPress={() => onSubmit()}>
           <Text style={{color: placeholderTextColor, backgroundColor: 'transparent'}}>Submit</Text>
+        </TouchableOpacity>
+        <Block style={{height: '3%'}} />
+        <TouchableOpacity
+          style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '70%', height: '6%', backgroundColor: 'rgba(126, 214, 223,1.0)'}}
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <Text style={{color: placeholderTextColor, backgroundColor: 'transparent'}}>Back</Text>
         </TouchableOpacity>
         <Block style={{display: 'flex', flexDirection: 'row'}}>
           <Block style={{zIndex: 3, position: 'absolute', backgroundColor: '#3b3a36', width: '100%', height: '100%'}} />

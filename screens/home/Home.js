@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import admob, {MaxAdContentRating, InterstitialAd, RewardedAd, RewardedAdEventType, TestIds} from '@react-native-firebase/admob';
 import {GETUSER, ADDPLANE} from './HomeQueries';
+import {LOGIN} from '../auth/AuthQueries';
+import {useLoading, useRoomsInfo, useSetLoading, useUserInfo} from '../../AuthContext';
 
 // Interstitial
 InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL);
@@ -39,7 +41,9 @@ const PaperTypeButtons = styled.View`
 `;
 
 export default ({navigation}) => {
-  const {loading, data, refetch} = useQuery(GETUSER);
+  const userInfo = useUserInfo();
+  const roomsInfo = useRoomsInfo();
+  const loading = useLoading();
   const [adLoaded, setAdLoaded] = useState(false);
   const [addPlaneMutation] = useMutation(ADDPLANE);
   useEffect(() => {
@@ -54,7 +58,7 @@ export default ({navigation}) => {
         await addPlaneMutation();
       }
     });
-    refetch();
+
     // Start loading the rewarded ad straight away
     rewarded.load();
     // Unsubscribe from events on unmount
@@ -64,7 +68,7 @@ export default ({navigation}) => {
   }, []);
 
   const onCreateRoom = (planeType) => {
-    if ((planeType === 'normal' && data.getUser.normalPlane < 1) || (planeType === 'gold' && data.getUser.goldPlane < 1)) {
+    if ((planeType === 'normal' && userInfo.normalPlane < 1) || (planeType === 'gold' && userInfo.goldPlane < 1)) {
       Alert.alert('비행기가 없음. 광고 보세요');
       return;
     }
@@ -86,13 +90,13 @@ export default ({navigation}) => {
           <PaperTypeButtons style={{marginTop: 20}}>
             <TouchableOpacity onPress={() => onCreateRoom('normal')}>
               <Icon style={{marginRight: 10}} name="paper-plane" size={30} color="#55efc4" />
-              <Text>{`${data.getUser.normalPlane}  / 3 개`}</Text>
+              <Text>{`${userInfo.normalPlane}  / 3 개`}</Text>
             </TouchableOpacity>
           </PaperTypeButtons>
           <PaperTypeButtons>
             <TouchableOpacity onPress={() => onCreateRoom('gold')}>
               <Icon style={{marginRight: 10}} name="paper-plane" size={30} color="#f1c40f" />
-              <Text>{`${data.getUser.goldPlane}  / 10 개`}</Text>
+              <Text>{`${userInfo.goldPlane}  / 10 개`}</Text>
             </TouchableOpacity>
           </PaperTypeButtons>
           <PaperTypeButtons></PaperTypeButtons>

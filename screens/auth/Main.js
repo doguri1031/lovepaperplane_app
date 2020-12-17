@@ -21,10 +21,10 @@ const LottieContainer = styled.View`
 
 export default ({navigation}) => {
   const logUserIn = useLogUserIn();
-  const {data, loading, refetch} = useQuery(LOGIN, {
-    variables: {machineId: constants.machineId},
-  });
+
   const onLoginPress = async () => {
+    navigation.navigate('RequestSecret');
+    /*
     await refetch();
     if (!loading && data.login) {
       console.log('login');
@@ -34,6 +34,7 @@ export default ({navigation}) => {
       console.log('fail login man');
       Alert.alert("you don't have account");
     }
+    */
   };
   return (
     <View>
@@ -42,7 +43,7 @@ export default ({navigation}) => {
       </LottieContainer>
       <Text>Main</Text>
       <Button text="login" onPress={onLoginPress} />
-      <Button text="sign up" onPress={() => navigation.navigate('SecretCheck')} />
+      <Button text="sign up" onPress={() => navigation.navigate('SignUp')} />
     </View>
   );
 };
